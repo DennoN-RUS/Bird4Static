@@ -1,5 +1,4 @@
 #!/bin/sh
-git clone https://github.com/DennoN-RUS/Bird4Static.git
 
 opkg install bird1-ipv4 curl cron bind-dig
 

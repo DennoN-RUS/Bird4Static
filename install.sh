@@ -28,4 +28,5 @@ sed 's/L2TP0/'$VPNC'/' /opt/etc/ndm/ifstatechanged.d/010-add_antizapret_route.sh
 
 /opt/etc/cron.daily/add-bird4_routes.sh
 
+/opt/etc/init.d/S10cron start
 /opt/etc/init.d/S04bird1-ipv4 start

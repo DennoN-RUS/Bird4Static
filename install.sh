@@ -26,6 +26,7 @@ echo "Введите имя интерфейса VPN из списка выше 
 read VPNC
 sed -i 's/L2TP0/'$VPNC'/' /opt/etc/ndm/ifstatechanged.d/010-add_antizapret_route.sh
 
+# Прописываем IP VPN-сервера в конфиг bird, чтобы избежать падения туннеля, если этот адрес есть в списке блокируемых
 echo "Введите IP-адрес удаленного сервера, где поднят VPN"
 
 while :; do

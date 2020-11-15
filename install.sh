@@ -21,8 +21,7 @@ echo "Введите имя интерфейса VPN из списка выше 
 read VPN
 sed -i 's/ppp0/'$VPN'/' /opt/etc/cron.daily/add-bird4_routes.sh
 
-ndmc -c "show interface" | awk '/Inter/ || /addr/' | grep -B 1 "addr" | awk '!/--/' | awk '{print $4$2}' | sed ':a;N;$!ba;s/\"name\n/ <-
-- /g;s/\"//g'
+ndmc -c "show interface" | awk '/Inter/ || /addr/' | grep -B 1 "addr" | awk '!/--/' | awk '{print $4$2}' | sed ':a;N;$!ba;s/\"name\n/ <-- /g;s/\"//g'
 echo "Введите имя интерфейса VPN из списка выше (например, IKE0 или L2TP0)"
 read VPNC
 sed -i 's/L2TP0/'$VPNC'/' /opt/etc/ndm/ifstatechanged.d/010-add_antizapret_route.sh

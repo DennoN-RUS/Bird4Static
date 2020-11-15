@@ -27,7 +27,7 @@ echo "Введите имя интерфейса VPN из списка выше 
 read VPNC
 sed -i 's/L2TP0/'$VPNC'/' /opt/etc/ndm/ifstatechanged.d/010-add_antizapret_route.sh
 
-echo "Введите IP-адрес VPN-сервера"
+echo "Введите IP-адрес удаленного сервера, где поднят VPN"
 
 while :; do
   read VPNIP

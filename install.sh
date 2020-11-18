@@ -2,12 +2,9 @@
 
 opkg install bird1-ipv4 curl cron bind-dig
 
-chmod +x Bird4Static/root/addip.sh
-chmod +x Bird4Static/etc/ndm/ifstatechanged.d/010-add_antizapret_route.sh
-chmod +x Bird4Static/etc/cron.daily/add-bird4_routes.sh
+find Bird4Static -name "*.sh" ! -name "install.sh" -exec chmod +x "{}" \;
+find Bird4Static -type d -depth 1 -exec cp -rf "{}" /opt \;
 cp /opt/etc/bird4.conf /opt/etc/bird4.conf-opkg
-cp -rf Bird4Static/etc/ /opt/
-cp -rf Bird4Static/root/ /opt/
 
 if [ -z "$(ip rule | grep 1000)" ]; then
   ip rule add table 1000

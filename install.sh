@@ -1,10 +1,6 @@
-#!/bin/sh
-
-opkg install bird1-ipv4 curl cron bind-dig
-
-find Bird4Static -name "*.sh" ! -name "install.sh" -exec chmod +x "{}" \;
+find Bird4Static -name "*.sh" \! -name "install.sh" -exec chmod +x "{}" \;
 cp /opt/etc/bird4.conf /opt/etc/bird4.conf-opkg
-find Bird4Static -type d -depth 1 -exec cp -rf "{}" /opt \;
+find Bird4Static -mindepth 1 -maxdepth 1 -type d -exec cp -rf "{}" /opt \;
 
 if [ -z "$(ip rule | grep 1000)" ]; then
   ip rule add table 1000

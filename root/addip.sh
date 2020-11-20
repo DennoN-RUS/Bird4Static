@@ -28,7 +28,6 @@ check_ip() {
   fi
 }
 
-[ -f "$3" ] && cat /dev/null > $3
 
 while read line; do
   [ -z "$line" ] && continue

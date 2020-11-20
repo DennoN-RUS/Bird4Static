@@ -28,7 +28,6 @@ check_ip() {
   fi
 }
 
-
 while read line; do
   [ -z "$line" ] && continue
   [ "${line:0:1}" = "#" ] && continue

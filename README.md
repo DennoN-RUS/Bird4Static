@@ -10,11 +10,11 @@
 2) Выполнить:
 
   opkg install git git-http
-  
-  git clone https://github.com/DennoN-RUS/Bird4Static.git
-  
+
+  git clone https://github.com/mdxl/Bird4Static.git
+
   chmod +x /opt/root/Bird4Static/install.sh
-  
+
   /opt/root/Bird4Static/install.sh
   
 3) Далее во время выполнения скрипта постребуется ввести имя интерфейса провайдера и интерфейса VPN. А потом имя интерфейса VPN из прошивки кинетика. Все данные будут выводиться в консоль перед вводом, так что необходимо только скопировать нужные имена и вставить в консоль

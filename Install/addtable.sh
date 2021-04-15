@@ -1,7 +1,7 @@
 #!/bin/sh
 
 [ "$1" != "hook" ] && exit 0
-[ "$id" != "L2TP0" ] && exit 0
+[ "$id" != "VPNINPUT" ] && exit 0
 
 case ${change}-${connected}-${link}-${up} in
 	link-no-down-down)

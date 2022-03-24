@@ -37,14 +37,14 @@ while read line; do
   # Выполнение команд после вызова check_ip изменит значение переменной "$?"
 
   case "$?" in
-    0) echo "route ${line}/32 via \"$2\";" >> $3
+    0) echo "route ${line}/32 via \"$2\";"
        ;;
-    1) echo "route ${line} via \"$2\";" >> $3
+    1) echo "route ${line} via \"$2\";"
        ;;
     3) if ! ipaddr=$(dig +short +tries=4 $line @localhost 2>/dev/null | grep -vE '^$'); then
          logger -s -t ${0##*/} "DNS: не удалось разрешить доменное имя: строка \"${line}\" проигнорирована."
        else
-         echo $ipaddr | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | cut_local | sed 's/^/route /g;s/$/\/32 via "'$2'";/g' >> $3
+         echo $ipaddr | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | cut_local | sed 's/^/route /g;s/$/\/32 via "'$2'";/g'
        fi
        ;;
   esac

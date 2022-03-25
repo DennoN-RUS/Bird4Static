@@ -22,6 +22,11 @@ VPN2TXT=$HOMEPATH/lists/user-vpn2.list
 ISPTXT=$HOMEPATH/lists/user-isp.list
 MD5_SUM=$HOMEPATH/scripts/sum.md5
 
+ #IPRANGE FUNCTION
+ipr_func() {
+  iprange --print-prefix "route " --print-suffix-nets " via \"$1\";" --print-suffix-ips "/32 via \"$1\";" "$2"
+}
+
  #INIT FILES
 WORK_FILES="$BLACKLIST \
             $ROUTE_FORCE_ISP $ROUTE_FORCE_VPN1 $ROUTE_FORCE_VPN2 \
@@ -32,33 +37,26 @@ for var in $WORK_FILES; do
   [ -s $var ] || echo 1 > $var
 done
 
- #INIT COMMAND
-CMD_FORCE_ISP="$HOMEPATH/scripts/addip.sh $ISPTXT $ISP"
-CMD_FORCE_VPN1="$HOMEPATH/scripts/addip.sh $VPN1TXT $VPN1"
-CMD_FORCE_VPN2="$HOMEPATH/scripts/addip.sh $VPN2TXT $VPN2"
-CMD_VPN1="$HOMEPATH/scripts/addip.sh $VPNTXT $VPN1"
-CMD_VPN2="$HOMEPATH/scripts/addip.sh $VPNTXT $VPN2"
-
  #WAIT DNS
 until ADDRS=$(dig +short google.com @localhost -p 53) && [ -n "$ADDRS" ] > /dev/null 2>&1; do sleep 5; done
 
  #BASE_LIST
 curl -sk $URL0 | sort | diff -u $BLACKLIST - | patch $BLACKLIST -
-cat $BLACKLIST | sed 's/^/route /' | sed 's/$/ via "'$VPN1'";/' | diff -u $ROUTE_BASE_VPN1 - | patch $ROUTE_BASE_VPN1 -
-cat $BLACKLIST | sed 's/^/route /' | sed 's/$/ via "'$VPN2'";/' | diff -u $ROUTE_BASE_VPN2 - | patch $ROUTE_BASE_VPN2 -
+ipr_func $VPN1 $BLACKLIST | diff -u $ROUTE_BASE_VPN1 - | patch $ROUTE_BASE_VPN1 -
+ipr_func $VPN2 $BLACKLIST | diff -u $ROUTE_BASE_VPN2 - | patch $ROUTE_BASE_VPN2 -
 
  #BASE_USER_LIST
-$CMD_VPN1 | sort | diff -u $ROUTE_USER_VPN1 - | patch $ROUTE_USER_VPN1 -
-$CMD_VPN2 | sort | diff -u $ROUTE_USER_VPN2 - | patch $ROUTE_USER_VPN2 -
+ipr_func $VPN1 $VPNTXT | diff -u $ROUTE_USER_VPN1 - | patch $ROUTE_USER_VPN1 -
+ipr_func $VPN2 $VPNTXT | diff -u $ROUTE_USER_VPN2 - | patch $ROUTE_USER_VPN2 -
 
  #FORCE_LIST
-$CMD_FORCE_ISP | sort | diff -u $ROUTE_FORCE_ISP - | patch $ROUTE_FORCE_ISP -
-$CMD_FORCE_VPN1 | sort | diff -u $ROUTE_FORCE_VPN1 - | patch $ROUTE_FORCE_VPN1 -
-$CMD_FORCE_VPN2 | sort | diff -u $ROUTE_FORCE_VPN2 - | patch $ROUTE_FORCE_VPN2 -
+ipr_func $ISP $ISPTXT | diff -u $ROUTE_FORCE_ISP - | patch $ROUTE_FORCE_ISP -
+ipr_func $VPN1 $VPN1TXT | diff -u $ROUTE_FORCE_VPN1 - | patch $ROUTE_FORCE_VPN1 -
+ipr_func $VPN2 $VPN2TXT | diff -u $ROUTE_FORCE_VPN2 - | patch $ROUTE_FORCE_VPN2 -
 
  #RESTART BIRD
 if [ "$(cat $MD5_SUM)" != "$(md5sum /opt/etc/bird4*)" ]; then
   md5sum /opt/etc/bird4* > $MD5_SUM
   echo "Restarting bird"
   killall -s SIGHUP bird4
-fi
+fi 

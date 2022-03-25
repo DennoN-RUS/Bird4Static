@@ -21,7 +21,7 @@ else
 fi
 
 # Installing packages
-opkg install bird1-ipv4 curl cron bind-dig
+opkg install bird1-ipv4 curl cron bind-dig iprange
 
 # Create start folders
 mkdir -p $SCRIPTS

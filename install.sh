@@ -69,7 +69,7 @@ ln -sf $SCRIPTS/add-bird4_routes.sh /opt/etc/cron.hourly/
 
 # Starting Services
 /opt/etc/init.d/S02bird-table start
-/opt/etc/cron.hourly/add-bird4_routes.sh
+$SCRIPTS/add-bird4_routes.sh
 /opt/etc/init.d/S10cron start
 /opt/etc/init.d/S04bird1-ipv4 start
 

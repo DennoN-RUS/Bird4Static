@@ -24,7 +24,11 @@ MD5_SUM=$HOMEPATH/scripts/sum.md5
 
  #IPRANGE FUNCTION
 ipr_func() {
-  iprange --print-prefix "route " --print-suffix-nets " via \"$1\";" --print-suffix-ips "/32 via \"$1\";" "$2"
+  if [[ $1 =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+    iprange --print-prefix "route " --print-suffix-nets " via $1;" --print-suffix-ips "/32 via $1;" "$2"
+  else
+    iprange --print-prefix "route " --print-suffix-nets " via \"$1\";" --print-suffix-ips "/32 via \"$1\";" "$2"
+  fi
 }
 
  #INIT FILES

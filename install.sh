@@ -21,7 +21,7 @@ else
 fi
 
 # Installing packages
-opkg install bird1-ipv4 curl cron bind-dig iprange
+opkg install bird1-ipv4 curl cron bind-dig iprange whois
 
 # Create start folders
 mkdir -p $SCRIPTS
@@ -45,7 +45,7 @@ cp -i $DIRECTORY/Install/$CONFFOLDER/bird4.conf /opt/etc/bird4.conf
 
 # Reading vpn and provider interfaces, replacing in scripts and bird configuration
 echo -e "\n----------------------"
-ifconfig | grep -B 1 "inet addr" | awk '{print $1$2}' | sed ':a;N;$!ba;s/Link\n/ <--/g;s/inetaddr:/ /g;s/--\n//g'
+ifconfig | grep -B 1 "inet " | awk '{print $1,$2}' | sed ':a;N;$!ba;s/\n//g;s/\--/\n/g' | awk '{print $1,$(NF)}'
 
 echo "Enter the name of the provider interface from the list above (for exaple ppp0 or eth3)"
 read ISP

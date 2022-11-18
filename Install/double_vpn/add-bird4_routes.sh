@@ -22,12 +22,25 @@ VPN2TXT=$HOMEPATH/lists/user-vpn2.list
 ISPTXT=$HOMEPATH/lists/user-isp.list
 MD5_SUM=$HOMEPATH/scripts/sum.md5
 
+ #GET AS LIST FUNCTION
+get_as_func() {
+  as_list=$(awk '/^AS([0-9]{1,5})/{print $1}' "$1")
+  if [[ -n "$as_list" ]] ; then 
+    for cur_as in $as_list; do
+      whois -h whois.radb.net -- "-i origin $cur_as" | awk '/^route:/{print $2}'
+    done
+      awk '!/^AS([0-9]{1,5})/{print $1}' "$1"
+  else
+    cat $1
+fi
+}
+
  #IPRANGE FUNCTION
 ipr_func() {
-  if [[ $1 =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-    iprange --print-prefix "route " --print-suffix-nets " via $1;" --print-suffix-ips "/32 via $1;" "$2"
+  if [[ $1 =~ ^\([0-9]{1,3}\.\){3}[0-9]{1,3}$ ]]; then
+    get_as_func "$2" | iprange --print-prefix "route " --print-suffix-nets " via $1;" --print-suffix-ips "/32 via $1;" -
   else
-    iprange --print-prefix "route " --print-suffix-nets " via \"$1\";" --print-suffix-ips "/32 via \"$1\";" "$2"
+    get_as_func "$2" | iprange --print-prefix "route " --print-suffix-nets " via \"$1\";" --print-suffix-ips "/32 via \"$1\";" -
   fi
 }
 

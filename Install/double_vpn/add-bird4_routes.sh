@@ -60,11 +60,11 @@ until ADDRS=$(dig +short google.com @localhost -p 53) && [ -n "$ADDRS" ] > /dev/
  #BASE_LIST
 curl -sk $URL0 | sort | diff -u $BLACKLIST - | patch $BLACKLIST -
 ipr_func $VPN1 $BLACKLIST | diff -u $ROUTE_BASE_VPN1 - | patch $ROUTE_BASE_VPN1 -
-ipr_func $VPN2 $BLACKLIST | diff -u $ROUTE_BASE_VPN2 - | patch $ROUTE_BASE_VPN2 -
+sed "s/$VPN1/$VPN2/g" $ROUTE_BASE_VPN1 | diff -u $ROUTE_BASE_VPN2 - | patch $ROUTE_BASE_VPN2 -
 
  #BASE_USER_LIST
 ipr_func $VPN1 $VPNTXT | diff -u $ROUTE_USER_VPN1 - | patch $ROUTE_USER_VPN1 -
-ipr_func $VPN2 $VPNTXT | diff -u $ROUTE_USER_VPN2 - | patch $ROUTE_USER_VPN2 -
+sed "s/$VPN1/$VPN2/g" $ROUTE_USER_VPN1 | diff -u $ROUTE_USER_VPN2 - | patch $ROUTE_USER_VPN2 -
 
  #FORCE_LIST
 ipr_func $ISP $ISPTXT | diff -u $ROUTE_FORCE_ISP - | patch $ROUTE_FORCE_ISP -

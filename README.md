@@ -66,13 +66,13 @@
 
 1) Выполнить в папке /opt/root/Bird4Static/ команду git pull
 2) Запустить скрипт установки, главное во время выполения не соглашаться с перезаписью файлов `user-*.list`
-```
-cp: overwrite '/opt/root/Bird4Static/lists/user-isp.list'? n
-cp: overwrite '/opt/root/Bird4Static/lists/user-vpn.list'? n
-cp: overwrite '/opt/root/Bird4Static/lists/user-vpn1.list'? n
-cp: overwrite '/opt/root/Bird4Static/lists/user-vpn2.list'? n
-```
-Если согласится на это, то ваши списки будут заменены дефолтными из репозитория
+    ```
+    cp: overwrite '/opt/root/Bird4Static/lists/user-isp.list'? n
+    cp: overwrite '/opt/root/Bird4Static/lists/user-vpn.list'? n
+    cp: overwrite '/opt/root/Bird4Static/lists/user-vpn1.list'? n
+    cp: overwrite '/opt/root/Bird4Static/lists/user-vpn2.list'? n
+    ```
+    Если согласится на это, то ваши списки будут заменены дефолтными из репозитория
 
 ## Удаление
 Для удаления нужно запустить:
@@ -84,7 +84,19 @@ cp: overwrite '/opt/root/Bird4Static/lists/user-vpn2.list'? n
 
 ## Известные проблемы
 
-  - Если у вас при заполнении файла user-isp.list перестают открываться ресурсы указанные в нем, то надо изменить переменную в скрипте add-bird4_routes.sh с ISP=eht3 (где eth3 - это интерфейс провайдера) на ISP=10.0.0.1 (где 10.0.0.1 - это шлюз провайдера). Узнать шлюз можно командой `ip route | grep default` ВНИМАНИЕ! Сам скрипт не отслеживает какой сейчас шлюз. Если вы указали один, а потом он изменился, то надо снова менять в файле значение переменной ISP и перезапускатть скрипт.
+  - Если у вас при заполнении файла user-isp.list перестают открываться ресурсы указанные в нем, то надо изменить переменную в скрипте add-bird4_routes.sh с ISP=eht3 (где eth3 - это интерфейс провайдера) на ISP=10.0.0.1 (где 10.0.0.1 - это шлюз провайдера). Узнать шлюз можно командой `ip route | grep default`
+
+    ВНИМАНИЕ! Сам скрипт не отслеживает какой сейчас шлюз. Если вы указали один, а потом он изменился, то надо снова менять в файле значение переменной ISP и перезапускать скрипт. Так же можно автоматизировать указание шлюза, указав в add-bird4_routes.sh ```ISP=`ip route | grep default | cut -f 3 -d' '` ``` Но при каждой смене шлюза нужно будет все равно запускать скрипт
+  - После установки во время выполения скрипта add-bird4_routes.sh вываливается ошибка
+    ```
+    sh: =~: unknown operand
+    BusyBox v1.31.0 () built-in shell (ash)
+    ```
+    Что бы исправить это нужно обновить busybox командами
+    ```
+    opkg update
+    opkg upgrade busybox
+    ```
 
 Более подробно что и как расписано [здесь](https://forum.keenetic.com/topic/8577-%D0%BE%D0%B1%D1%85%D0%BE%D0%B4-%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8%D1%80%D0%BE%D0%B2%D0%BE%D0%BA-%D1%81-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%D0%BC-bird4/)
 

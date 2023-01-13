@@ -1,6 +1,13 @@
 #!/bin/sh
 
-SCRIPTS=$HOME/Bird4Static/scripts
+ABSOLUTE_FILENAME=`readlink -f "$0"`
+HOME_FOLDER=`dirname "$ABSOLUTE_FILENAME"` && HOME_FOLDER_SED=$(echo $HOME_FOLDER | sed 's/\//\\\//g')
+LISTS=$HOME_FOLDER/lists
+SCRIPTS=$HOME_FOLDER/scripts
+SYSTEM_FOLDER=`echo $HOME_FOLDER | awk -F/opt '{print $1}'`
+SYSTEM_FOLDER=$SYSTEM_FOLDER/opt && SYSTEM_FOLDER_SED=$(echo $SYSTEM_FOLDER | sed 's/\//\\\//g')
+
+SCRIPTS=$HOME_FOLDER/scripts
 
 while true; do
     echo "Begin uninstall? y/n"
@@ -9,8 +16,8 @@ while true; do
         [Yy]* )
 
 # Stop Services
-/opt/etc/init.d/S02bird-table stop
-/opt/etc/init.d/S04bird1-ipv4 stop
+$SYSTEM_FOLDER/etc/init.d/S02bird-table stop
+$SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 stop
 
 # Remove packages
 # bird
@@ -35,11 +42,11 @@ if [ "$answer" = "1" ]; then opkg remove whois; fi
 rm -r $SCRIPTS
 
 # Remove scripts into folders
-rm /opt/etc/init.d/S02bird-table
-rm /opt/etc/cron.hourly/add-bird4_routes.sh
+rm $SYSTEM_FOLDER/etc/init.d/S02bird-table
+rm $SYSTEM_FOLDER/etc/cron.hourly/add-bird4_routes.sh
 
 # Remove bird lists
-rm -r /opt/etc/bird4*.list
+rm -r $SYSTEM_FOLDER/etc/bird4*.list
 
 exit 0
 ;;

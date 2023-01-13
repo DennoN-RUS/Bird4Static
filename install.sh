@@ -42,7 +42,19 @@ cp -i $HOME_FOLDER/Install/$CONFFOLDER/*.list $LISTS
 if [ ! -f "$SYSTEM_FOLDER/etc/bird4.conf-opkg" ]; then
   mv $SYSTEM_FOLDER/etc/bird4.conf $SYSTEM_FOLDER/etc/bird4.conf-opkg;
 fi
-cp -i $HOME_FOLDER/Install/$CONFFOLDER/bird4.conf $SYSTEM_FOLDER/etc/bird4.conf
+cp $HOME_FOLDER/Install/$CONFFOLDER/bird4.conf $SYSTEM_FOLDER/etc/bird4.conf
+
+# Getting URL for routing, replacing in scripts
+echo -e "Witch service do you want to use\n 1 - https://antifilter.download/list/allyouneed.lst\n 2 - https://antifilter.network/download/ipsmart.lst\n or enter custom url"
+read FILTER
+if [ "$FILTER" == "1" ]; then
+  sed -i 's/URLINPUT/https:\/\/antifilter.download\/list\/allyouneed.lst/' $SCRIPTS/add-bird4_routes.sh
+elif [ "$FILTER" == "2" ]; then
+  sed -i 's/URLINPUT/https:\/\/antifilter.network\/download\/ipsmart.lst/' $SCRIPTS/add-bird4_routes.sh
+else
+  FILTER=$(echo $FILTER | sed 's/\//\\\//g')
+  sed -i 's/URLINPUT/'$FILTER'/' $SCRIPTS/add-bird4_routes.sh
+fi
 
 # Reading vpn and provider interfaces, replacing in scripts and bird configuration
 echo -e "\n----------------------"

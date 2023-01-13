@@ -81,7 +81,6 @@ until ADDRS=$(dig +short google.com @localhost -p 53) && [ -n "$ADDRS" ] > /dev/
 curl -sk $URL0 | sort | diff_funk $BLACKLIST - check
 ipr_func $VPN1 $BLACKLIST | diff_funk $ROUTE_BASE_VPN1 -
 sed "s/$VPN1/$VPN2/g" $ROUTE_BASE_VPN1 | diff_funk $ROUTE_BASE_VPN2 -
-fi
 
  #BASE_USER_LIST
 ipr_func $VPN1 $VPNTXT | diff_funk $ROUTE_USER_VPN1 -

@@ -66,9 +66,15 @@
 
 ## Обновление
 
-1) Выполнить в папке `/opt/root/Bird4Static/` команду `git pull`
+1) Перейти в папку `Bird4Static`
 
-2) Запустить скрипт установки `./install.sh`, главное во время выполнения не соглашаться с перезаписью файлов `user-*.list`
+2) Выполнить
+    ```
+    git restore install.sh
+    git pull
+    chmod +x install.sh
+    ```
+3) Запустить скрипт установки `./install.sh`, главное во время выполнения не соглашаться с перезаписью файлов `user-*.list`
     ```
     cp: overwrite '/opt/root/Bird4Static/lists/user-isp.list'? n
     cp: overwrite '/opt/root/Bird4Static/lists/user-vpn.list'? n

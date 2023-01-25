@@ -102,7 +102,7 @@
     sh: =~: unknown operand
     BusyBox v1.31.0 () built-in shell (ash)
     ```
-    Что бы исправить это нужно обновить busybox командами
+    Что бы исправить это нужно обновить busybox командами (добавлено в скрипт установки начиная с версии v3.4.1)
     ```
     opkg update
     opkg upgrade busybox

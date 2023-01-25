@@ -85,3 +85,10 @@ git clone -b v3.3.2 https://github.com/DennoN-RUS/Bird4Static.git
 3) В установочном скрипте добавлена возможность выбрать из двух сервисов для получения списков блокировок или ввода своего
 
 git clone -b v3.4 https://github.com/DennoN-RUS/Bird4Static.git
+
+## v3.4.1
+
+1) В скрипты установки/удаления добавлен пакет bind-libs, который в исключительных случаях не ставился вместе с bind-dig
+2) В скрипт установки добавлено принудительное обновление busybox
+
+git clone -b v3.4.1 https://github.com/DennoN-RUS/Bird4Static.git

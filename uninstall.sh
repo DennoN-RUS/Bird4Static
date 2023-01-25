@@ -30,7 +30,7 @@ answer=0; echo "Do you want remove 'cron'? 0 - no 1 - yes (default: no)"; read a
 if [ "$answer" = "1" ]; then opkg remove cron; fi
 # bind-dig
 answer=0; echo "Do you want remove 'bind-dig'? 0 - no 1 - yes (default: no)"; read answer
-if [ "$answer" = "1" ]; then opkg remove bind-dig; fi
+if [ "$answer" = "1" ]; then opkg remove bind-dig bind-libs; fi
 # iprange
 answer=0; echo "Do you want remove 'iprange'? 0 - no 1 - yes (default: no)"; read answer
 if [ "$answer" = "1" ]; then opkg remove iprange; fi

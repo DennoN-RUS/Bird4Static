@@ -92,3 +92,9 @@ git clone -b v3.4 https://github.com/DennoN-RUS/Bird4Static.git
 2) В скрипт установки добавлено принудительное обновление busybox
 
 git clone -b v3.4.1 https://github.com/DennoN-RUS/Bird4Static.git
+
+## v3.4.2
+
+1) Изменен сервис для получения списка адресов из номера AS c radb.net (который перестал работать) на ripe.net
+
+git clone -b v3.4.2 https://github.com/DennoN-RUS/Bird4Static.git

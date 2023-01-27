@@ -22,7 +22,7 @@ get_as_func() {
   as_list=$(awk '/^AS([0-9]{1,5})/{print $1}' "$1")
   if [[ -n "$as_list" ]] ; then 
     for cur_as in $as_list; do
-      whois -h whois.radb.net -- "-i origin $cur_as" | awk '/^route:/{print $2}'
+      curl -s https://stat.ripe.net/data/announced-prefixes/data.json?resource=$cur_as | awk -F '"' '/([0-9]{1,3}.){3}[0-9]{1,3}\/[0-9]{1,3}/{print $4}'
     done
       awk '!/^AS([0-9]{1,5})/{print $1}' "$1"
   else
@@ -71,7 +71,7 @@ if [[ "$DEBUG" == 1 ]]; then echo "########### $(date) STEP_2: wait dns ########
 until ADDRS=$(dig +short google.com @localhost -p 53) && [ -n "$ADDRS" ] > /dev/null 2>&1; do sleep 5; done
 
  #BASE_LIST
-curl -sk $URL0 | sort | diff_funk $BLACKLIST - check
+curl -s $URL0 | sort | diff_funk $BLACKLIST - check
 ipr_func $VPN1 $BLACKLIST | diff_funk $ROUTE_BASE_VPN1 -
 
  #FORCE_LIST

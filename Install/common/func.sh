@@ -22,7 +22,7 @@ get_as_func() {
     done
       awk '!/^AS([0-9]{1,5})/{print $0}' "$1"
   else
-    then cat $1
+    cat $1
 fi
 }
 

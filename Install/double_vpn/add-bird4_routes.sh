@@ -29,9 +29,9 @@ get_as_func() {
   as_list=$(awk '/^AS([0-9]{1,5})/{print $1}' "$1")
   if [[ -n "$as_list" ]] ; then 
     for cur_as in $as_list; do
-      curl -s https://stat.ripe.net/data/announced-prefixes/data.json?resource=$cur_as | awk -F '"' '/([0-9]{1,3}.){3}[0-9]{1,3}\/[0-9]{1,3}/{print $4}'
+      curl -s https://stat.ripe.net/data/announced-prefixes/data.json?resource=$cur_as | awk -F '"' '/([0-9]{1,3}.){3}[0-9]{1,3}\/[0-9]{1,2}/{print $4}'
     done
-      awk '!/^AS([0-9]{1,5})/{print $1}' "$1"
+      awk '!/^AS([0-9]{1,5})/{print $0}' "$1"
   else
     cat $1
 fi
@@ -50,11 +50,11 @@ ipr_func() {
  #DIFF FUNCTION
 diff_funk() {
   if [[ "$3" == "check" ]]; then
-    if grep -q -E "([0-9]{1,3}.){3}[0-9]{1,3}/[0-9]{1,3}" $2; then continue; else return; fi
+    if grep -q -E "([0-9]{1,3}.){3}[0-9]{1,3}" $2; then continue; else return; fi
   fi
   if [[ "$DEBUG" == 1 ]]; then
     patch_file=/tmp/patch_$(echo $1 | awk -F/ '{print $NF}')
-    echo "########### $(date) STEP_3: diff $(echo $1 | awk -F/ '{print $NF}' ) ###########"
+    echo -e "\n########### $(date) STEP_3: diff $(echo $1 | awk -F/ '{print $NF}' ) ###########\n"
     diff -u $1 $2 > $patch_file
     cat $patch_file && patch $1 $patch_file && rm $patch_file
   else
@@ -63,7 +63,7 @@ diff_funk() {
 }
 
  #INIT FILES
-if [[ "$DEBUG" == 1 ]]; then echo "########### $(date) STEP_1: add init files ###########"; fi
+if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_1: add init files ###########\n"; fi
 WORK_FILES="$BLACKLIST \
             $ROUTE_FORCE_ISP $ROUTE_FORCE_VPN1 $ROUTE_FORCE_VPN2 \
             $ROUTE_BASE_VPN1 $ROUTE_USER_VPN1 \
@@ -74,7 +74,7 @@ for var in $WORK_FILES; do
 done
 
  #WAIT DNS
-if [[ "$DEBUG" == 1 ]]; then echo "########### $(date) STEP_2: wait dns ###########"; fi
+if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_2: wait dns ###########\n"; fi
 until ADDRS=$(dig +short google.com @localhost -p 53) && [ -n "$ADDRS" ] > /dev/null 2>&1; do sleep 5; done
 
  #BASE_LIST
@@ -92,7 +92,7 @@ ipr_func $VPN1 $VPN1TXT | diff_funk $ROUTE_FORCE_VPN1 -
 ipr_func $VPN2 $VPN2TXT | diff_funk $ROUTE_FORCE_VPN2 -
 
  #RESTART BIRD
-if [[ "$DEBUG" == 1 ]]; then echo "########### $(date) STEP_4: restart bird ###########"; fi
+if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_4: restart bird ###########\n"; fi
 if [ "$(cat $MD5_SUM)" != "$(md5sum $SYSTEM_FOLDER/etc/bird4*)" ]; then
   md5sum $SYSTEM_FOLDER/etc/bird4* > $MD5_SUM
   echo "Restarting bird"

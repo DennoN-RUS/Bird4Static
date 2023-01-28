@@ -60,3 +60,9 @@ restart_bird_func() {
     killall -s SIGHUP bird4
   fi
 }
+
+ #CHECK DUPLICATE IN ROUTES
+check_dubl_func(){
+  echo "DUPLICATE IN FILES"
+  sort -m $SYSTEM_FOLDER/etc/bird4*.list | uniq -d |  grep -Fx -f - $SYSTEM_FOLDER/etc/bird4*.list
+}

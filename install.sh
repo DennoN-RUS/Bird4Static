@@ -38,8 +38,10 @@ mkdir -p $LISTS
 
 # Filling script folders and custom sheets
 
+cp $HOME_FOLDER/Install/common/*.sh $SCRIPTS
 cp $HOME_FOLDER/Install/$CONFFOLDER/*.sh $SCRIPTS
 chmod +x $SCRIPTS/*.sh
+cp -i $HOME_FOLDER/Install/common/*.list $LISTS
 cp -i $HOME_FOLDER/Install/$CONFFOLDER/*.list $LISTS
 
 # Copying the bird configuration file

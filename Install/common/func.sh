@@ -13,6 +13,18 @@ init_files_func() {
   done
 }
 
+ #DIFF FUNCTION
+diff_funk() {
+  if [[ "$DEBUG" == 1 ]]; then
+    patch_file=/tmp/patch_$(echo $1 | awk -F/ '{print $NF}')
+    echo -e "\n########### $(date) STEP_3: diff $(echo $1 | awk -F/ '{print $NF}' ) ###########\n" >&2
+    diff -u $1 $2 > $patch_file
+    cat $patch_file && patch $1 $patch_file
+  else
+    diff -u $1 $2 | patch $1 -
+  fi
+}
+
  #GET AS LIST FUNCTION
 get_as_func() {
   as_list=$(awk '/^AS([0-9]{1,5})/{print $1}' "$1")
@@ -33,35 +45,23 @@ fi
  #IPRANGE FUNCTION
 ipr_func() {
   if [[ $1 =~ ^\([0-9]{1,3}\.\){3}[0-9]{1,3}$ ]]; then cur_gw=$1 ; else cur_gw=\"$1\"; fi
-  if [[ "$DEBUG" == 1 ]]; then ipr_verb="-v"; echo -e "\n########### $(date) STEP_5: ipr func file $(echo $2 | awk -F/ '{print $NF}' ) ###########\n" >&2; fi
+  if [[ "$DEBUG" == 1 ]]; then ipr_verb="-v"; echo -e "\n########### $(date) STEP_4: ipr func file $(echo $2 | awk -F/ '{print $NF}' ) ###########\n" >&2; fi
   get_as_func "$2" | iprange $ipr_verb --print-prefix "route " --print-suffix-nets " via $cur_gw;" --print-suffix-ips "/32 via $cur_gw;" -
 }
 
- #DIFF FUNCTION
-diff_funk() {
-  if [[ "$DEBUG" == 1 ]]; then
-    patch_file=/tmp/patch_$(echo $1 | awk -F/ '{print $NF}')
-    echo -e "\n########### $(date) STEP_4: diff $(echo $1 | awk -F/ '{print $NF}' ) ###########\n" >&2
-    diff -u $1 $2 > $patch_file
-    cat $patch_file && patch $1 $patch_file
-  else
-    diff -u $1 $2 | patch $1 -
+ #RESTART BIRD FUNCTION
+restart_bird_func() {
+  if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_5: restart bird ###########\n" >&2; fi
+  if [ "$(cat $MD5_SUM)" != "$(md5sum $SYSTEM_FOLDER/etc/bird4*)" ]; then
+    md5sum $SYSTEM_FOLDER/etc/bird4* > $MD5_SUM
+    echo "Restarting bird"
+    killall -s SIGHUP bird4
   fi
 }
 
  #CURL FUNCTION
 curl_funk() {
   if [ "$(curl -s $1 | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}')" ]; then curl -s $1 | sort ; else cat $2; fi
-}
-
- #RESTART BIRD FUNCTION
-restart_bird_func() {
-  if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_6: restart bird ###########\n" >&2; fi
-  if [ "$(cat $MD5_SUM)" != "$(md5sum $SYSTEM_FOLDER/etc/bird4*)" ]; then
-    md5sum $SYSTEM_FOLDER/etc/bird4* > $MD5_SUM
-    echo "Restarting bird"
-    killall -s SIGHUP bird4
-  fi
 }
 
  #CHECK DUPLICATE IN ROUTES FUNCTION

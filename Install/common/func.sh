@@ -18,18 +18,17 @@ get_as_func() {
   as_list=$(awk '/^AS([0-9]{1,5})/{print $1}' "$1")
   if [[ -n "$as_list" ]] ; then 
     for cur_as in $as_list; do
-      if [[ "$2" == "test" ]]; then echo -e "\n$cur_as"; fi
       curl -s https://stat.ripe.net/data/announced-prefixes/data.json?resource=$cur_as | awk -F '"' '/([0-9]{1,3}.){3}[0-9]{1,3}\/[0-9]{1,2}/{print $4}'
     done
-      if [[ "$2" != "test" ]]; then awk '!/^AS([0-9]{1,5})/{print $0}' "$1"; fi
+      awk '!/^AS([0-9]{1,5})/{print $0}' "$1"
   else
-    if [[ "$2" != "test" ]]; then cat $1; fi
+    then cat $1
 fi
 }
 
  #IPRANGE FUNCTION
 ipr_func() {
-  if [[ "$DEBUG" == 1 ]]; then ipr_verb="-v"; get_as_func "$2" test; fi
+  if [[ "$DEBUG" == 1 ]]; then ipr_verb="-v"; fi
   if [[ $1 =~ ^\([0-9]{1,3}\.\){3}[0-9]{1,3}$ ]]; then cur_gw=$1 ; else cur_gw=\"$1\"; fi
   get_as_func "$2" | iprange $ipr_verb --print-prefix "route " --print-suffix-nets " via $cur_gw;" --print-suffix-ips "/32 via $cur_gw;" -
 }

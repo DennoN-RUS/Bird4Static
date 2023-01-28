@@ -30,7 +30,7 @@ WORK_FILES="$BLACKLIST \
 init_files_func $WORK_FILES
 
  #BASE_LIST
-curl -s $URL0 | sort | diff_funk $BLACKLIST - check
+curl_funk $URL0 $BLACKLIST | diff_funk $BLACKLIST -
 ipr_func $VPN1 $BLACKLIST | diff_funk $ROUTE_BASE_VPN1 -
 
  #FORCE_LIST

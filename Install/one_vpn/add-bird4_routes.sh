@@ -41,4 +41,4 @@ ipr_func $VPN1 $VPN1TXT | diff_funk $ROUTE_FORCE_VPN1 -
 restart_bird_func
 
  #CHECK DUPLICATE
-check_dubl_func
+check_dupl_func

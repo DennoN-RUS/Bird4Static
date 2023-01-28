@@ -55,4 +55,4 @@ ipr_func $VPN2 $VPN2TXT | diff_funk $ROUTE_FORCE_VPN2 -
 restart_bird_func
 
  #CHECK DUPLICATE
-check_dubl_func
+check_dupl_func

@@ -7,10 +7,7 @@ wait_dns_func() {
  #INIT FILES FUNCTION
 init_files_func() {
   if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_2: add init files ###########\n" >&2; fi
-  touch $1
-  for var in $1; do
-    [ -s $var ] || echo 1 > $var
-  done
+  touch $@
 }
 
  #DIFF FUNCTION
@@ -61,7 +58,12 @@ restart_bird_func() {
 
  #CURL FUNCTION
 curl_funk() {
-  if [ "$(curl -s $1 | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}')" ]; then curl -s $1 | sort ; else cat $2; fi
+  if [[ "$DISABLE_URLS" == 0 ]]; then
+    for var in $@; do
+      if [[ $var =~ ^http ]]; then cur_url=$(echo "$cur_url $var"); else last=$var; fi
+    done
+    if [ "$(curl -s $cur_url | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}')" ]; then curl -s $cur_url | sort ; else cat $last; fi
+  fi
 }
 
  #CHECK DUPLICATE IN ROUTES FUNCTION

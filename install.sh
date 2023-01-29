@@ -22,7 +22,7 @@ opkg update
 opkg upgrade busybox
 
 # Installing packages
-opkg install bird1-ipv4 curl cron bind-dig bind-libs iprange whois
+opkg install bird1-ipv4 curl cron bind-dig bind-libs iprange whois diffutils patch
 
 # Getting the path to run the script
 ABSOLUTE_FILENAME=`readlink -f "$0"`

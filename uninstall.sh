@@ -37,6 +37,9 @@ if [ "$answer" = "1" ]; then opkg remove iprange; fi
 # whois
 answer=0; echo "Do you want remove 'whois'? 0 - no 1 - yes (default: no)"; read answer
 if [ "$answer" = "1" ]; then opkg remove whois; fi
+# whois
+answer=0; echo "Do you want remove 'diffutils' and 'patch'? 0 - no 1 - yes (default: no)"; read answer
+if [ "$answer" = "1" ]; then opkg remove diffutils patch; fi
 
 # Remove start folders
 rm -r $SCRIPTS

@@ -29,7 +29,7 @@ vpn_bird_func $BIRD_CONF $VPN1
 
  #BASE_LIST
 curl_funk $URLS $BLACKLIST | diff_funk $BLACKLIST -
-ipr_func VPN $BLACKLIST | diff_funk $ROUTE_BASE_VPN -
+ipr_func lo $BLACKLIST | diff_funk $ROUTE_BASE_VPN -
 
  #FORCE_LIST
 ipr_func $ISP $ISPTXT | diff_funk $ROUTE_FORCE_ISP -

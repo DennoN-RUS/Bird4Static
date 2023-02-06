@@ -111,7 +111,7 @@ read VPN1
 sed -i 's/VPN1INPUT/'$VPN1'/' $SCRIPTS/*.sh
 sed -i 's/VPN1INPUT/'$VPN1'/' $SYSTEM_FOLDER/etc/bird4.conf
 
-if [ "$CONF" == "1" ]; then 
+if [ "$CONF" == "2" ]; then 
   echo "Enter the Second VPN interface name from the list above (for exaple ovpn_br0 or nwg0)"
   read VPN2
   sed -i 's/VPN2INPUT/'$VPN2'/' $SCRIPTS/*.sh

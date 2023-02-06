@@ -40,17 +40,18 @@ get_info_func() {
   fi
 }
 
+ #INIT FILES FUNCTION
+init_files_func() {
+  if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_2: add init files ###########\n" >&2; fi
+  touch $@
+  if [[ "$init" == "-i" ]]; then exit; fi
+}
+
  #WAIT DNS FUNCTION
 wait_dns_func() {
   if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_1: wait dns ###########\n" >&2; fi
   until ADDRS=$(dig +short google.com @localhost -p 53) && [ -n "$ADDRS" ] > /dev/null 2>&1; do sleep 5; done 
 } 
-
- #INIT FILES FUNCTION
-init_files_func() {
-  if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_2: add init files ###########\n" >&2; fi
-  touch $@
-}
 
  #check VPN in bird config
 vpn_bird_func() {

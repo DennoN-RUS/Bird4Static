@@ -14,15 +14,16 @@ source $HOMEPATH/scripts/func.sh
  #GET INFO ABOUT SCRIPT
 get_info_func $1
 
- #WAIT DNS
-wait_dns_func
-
  #INIT FILES
 WORK_FILES="$BLACKLIST \
             $ROUTE_FORCE_ISP $ROUTE_FORCE_VPN1 \
             $ROUTE_BASE_VPN \
             $MD5_SUM"
+INIT="$1"
 init_files_func $WORK_FILES
+
+ #WAIT DNS
+wait_dns_func
 
  #CHECK AND REPLACE VPN IN BIRD CONF
 vpn_bird_func $BIRD_CONF $VPN1

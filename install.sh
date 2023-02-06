@@ -130,9 +130,10 @@ rm -r $SYSTEM_FOLDER/etc/bird4*.list
 
 # Starting Services
 $SYSTEM_FOLDER/etc/init.d/S02bird-table restart
-$SCRIPTS/add-bird4_routes.sh
+$SCRIPTS/add-bird4_routes.sh -i
 $SYSTEM_FOLDER/etc/init.d/S10cron restart
 $SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 restart
+$SCRIPTS/add-bird4_routes.sh
 
 exit 0
 ;;

@@ -13,7 +13,6 @@ HOMEPATH=HOMEFOLDERINPUT
 source $HOMEPATH/scripts/func.sh
 
  #GET INFO ABOUT SCRIPT
-INPUT=$1
 get_info_func $1
 
  #INIT FILES

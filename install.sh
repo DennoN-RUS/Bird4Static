@@ -3,7 +3,7 @@
 VERSION="v3.6.0"
 
 while true; do
-    echo "Begin install? y/n"
+    echo -e "\nBegin install? y/n"
     read yn
     case $yn in
         [Yy]* )

@@ -52,6 +52,25 @@ init_files_func() {
   touch $@
 }
 
+ #check VPN in bird config
+vpn_bird_func() {
+  if [ "$(grep -c "ifname = \"$2\"; #MARK_VPN1" $1)" == 0 ]; then sed -i '/#MARK_VPN1/s/".*"/"'$2'"/' $1; fi
+  if [ "$#" == 2 ]; then
+    if [ "$(grep -c "interface \"$2\"" $1)" == 0 ]; then sed -i 's/interface .*/interface "'$2'";/' $1; fi
+  elif [ "$#" == 3 ]; then
+    if [ "$(grep -c "interface \"$2\", \"$3\"" $1)" == 0 ]; then sed -i 's/interface .*/interface "'$2'", "'$3'"/;' $1; fi
+    if [ "$(grep -c "ifname = \"$3\"; #MARK_VPN2" $1)" == 0 ]; then sed -i '/#MARK_VPN2/s/".*"/"'$3'"/' $1; fi
+  fi
+}
+
+ #CURL FUNCTION
+curl_funk() {
+  for var in $@; do
+    if [[ $var =~ ^http ]]; then cur_url=$(echo "$cur_url $var"); else last=$var; fi
+  done
+  if [ "$(curl -s $cur_url | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}')" ]; then curl -s $cur_url | sort ; else cat $last; fi
+}
+
  #DIFF FUNCTION
 diff_funk() {
   if [[ "$DEBUG" == 1 ]]; then
@@ -95,25 +114,6 @@ restart_bird_func() {
     md5sum $SYSTEM_FOLDER/etc/bird4* > $MD5_SUM
     echo "Restarting bird"
     killall -s SIGHUP bird4
-  fi
-}
-
- #CURL FUNCTION
-curl_funk() {
-  for var in $@; do
-    if [[ $var =~ ^http ]]; then cur_url=$(echo "$cur_url $var"); else last=$var; fi
-  done
-  if [ "$(curl -s $cur_url | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}')" ]; then curl -s $cur_url | sort ; else cat $last; fi
-}
-
- #check VPN in bird config
-vpn_bird_func() {
-  if [ "$(grep -c "ifname = \"$2\"; #MARK_VPN1" $1)" == 0 ]; then sed -i '/#MARK_VPN1/s/".*"/"'$2'"/' $1; fi
-  if [ "$#" == 2 ]; then
-    if [ "$(grep -c "interface \"$2\"" $1)" == 0 ]; then sed -i 's/interface .*/interface "'$2'";/' $1; fi
-  elif [ "$#" == 3 ]; then
-    if [ "$(grep -c "interface \"$2\", \"$3\"" $1)" == 0 ]; then sed -i 's/interface .*/interface "'$2'", "'$3'"/;' $1; fi
-    if [ "$(grep -c "ifname = \"$3\"; #MARK_VPN2" $1)" == 0 ]; then sed -i '/#MARK_VPN2/s/".*"/"'$3'"/' $1; fi
   fi
 }
 

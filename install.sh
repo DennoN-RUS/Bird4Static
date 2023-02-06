@@ -119,6 +119,7 @@ if [ "$CONF" == "2" ]; then
 fi
 
 sed -i 's/HOMEFOLDERINPUT/'$HOME_FOLDER_SED'/; s/SYSTEMFOLDERINPUT/'$SYSTEM_FOLDER_SED'/' $SCRIPTS/*.sh
+id=$(ip route | awk '/^default/{print $3}') && sed -i 's/IDINPUT/'id'/' $SYSTEM_FOLDER/etc/bird4.conf
 
 # Organizing scripts into folders
 ln -sf $SCRIPTS/bird-table.sh $SYSTEM_FOLDER/etc/init.d/S02bird-table

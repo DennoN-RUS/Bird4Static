@@ -14,7 +14,7 @@
 ```
   opkg install git git-http
   git clone https://github.com/DennoN-RUS/Bird4Static.git
-  chmod +x ./Bird4Static/install.sh
+  chmod +x ./Bird4Static/*.sh
   ./Bird4Static/install.sh 
 ```
 

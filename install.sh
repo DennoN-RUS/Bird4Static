@@ -28,7 +28,7 @@ mkdir -p $SCRIPTS
 mkdir -p $LISTS
 
 # Filling script folders and custom sheets
-echo "Do you want to use double vpn configuration? 1 - no (default) 2 - yes"
+echo -e "\nDo you want to use double vpn configuration? 1 - no (default) 2 - yes"
 read CONF
 if [ "$CONF" != "2" ]; then 
   CONF=1
@@ -53,7 +53,7 @@ fi
 cp $HOME_FOLDER/Install/$CONFFOLDER/bird4.conf $SYSTEM_FOLDER/etc/bird4.conf
 
 # Getting URL for routing, replacing in scripts
-echo -e "Select mode: \n 1 - Download file from antifilter service (default) \n 2 - Use BGP \n 3 - Use Only user files"
+echo -e "\nSelect mode: \n 1 - Download file from antifilter service (default) \n 2 - Use BGP \n 3 - Use Only user files"
 read MODE
 if [ "$MODE" == "2" ]; then 
   echo "You are select 'BGP mode'"
@@ -67,7 +67,7 @@ sed -i 's/MODEINPUT/'$MODE'/' $SCRIPTS/*.sh
 
 if [ "$MODE" == "1" ]; then 
   # Download mode
-  echo -e "Which service do you want to use\n 1 - https://antifilter.download/list/allyouneed.lst\n 2 - https://antifilter.network/download/ipsmart.lst\n or enter custom url"
+  echo -e "\nWhich service do you want to use\n 1 - https://antifilter.download/list/allyouneed.lst\n 2 - https://antifilter.network/download/ipsmart.lst\n or enter custom url"
   read FILTER
   if [ "$FILTER" == "1" ]; then
     FILTER="https://antifilter.download/list/allyouneed.lst"
@@ -119,7 +119,7 @@ if [ "$CONF" == "2" ]; then
 fi
 
 sed -i 's/HOMEFOLDERINPUT/'$HOME_FOLDER_SED'/; s/SYSTEMFOLDERINPUT/'$SYSTEM_FOLDER_SED'/' $SCRIPTS/*.sh
-id=$(ip route | awk '/^default/{print $3}') && sed -i 's/IDINPUT/'id'/' $SYSTEM_FOLDER/etc/bird4.conf
+id=$(ip route | awk '/^default/{print $3}') && sed -i 's/IDINPUT/'$id'/' $SYSTEM_FOLDER/etc/bird4.conf
 
 # Organizing scripts into folders
 ln -sf $SCRIPTS/bird-table.sh $SYSTEM_FOLDER/etc/init.d/S02bird-table

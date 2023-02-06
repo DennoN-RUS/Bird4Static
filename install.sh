@@ -118,7 +118,7 @@ if [ "$CONF" == "2" ]; then
   sed -i 's/VPN2INPUT/'$VPN2'/' $SYSTEM_FOLDER/etc/bird4.conf
 fi
 
-sed -i 's/HOMEPATHINPUT/'$HOME_FOLDER_SED'/; s/SYSTEMFOLDERINPUT/'$SYSTEM_FOLDER_SED'/' $SCRIPTS/add-bird4_routes.sh
+sed -i 's/HOMEFOLDERINPUT/'$HOME_FOLDER_SED'/; s/SYSTEMFOLDERINPUT/'$SYSTEM_FOLDER_SED'/' $SCRIPTS/*.sh
 
 # Organizing scripts into folders
 ln -sf $SCRIPTS/bird-table.sh $SYSTEM_FOLDER/etc/init.d/S02bird-table

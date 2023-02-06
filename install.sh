@@ -79,7 +79,7 @@ if [ "$MODE" == "1" ]; then
   sed -i 's/URLINPUT/'$FILTER'/' $SCRIPTS/*.sh
 else
   # File mode
-  sed '/$BLACKLIST -/s/^/#/; /$ROUTE_BASE_VPN -/s/^/#/' .$SCRIPTS/add-bird4_routes.sh
+  sed '/$BLACKLIST -/s/^/#/; /$ROUTE_BASE_VPN -/s/^/#/' $SCRIPTS/add-bird4_routes.sh
   if [ "$MODE" == "2" ]; then
   # BGP mode
     cat $HOME_FOLDER/Install/common/bird4-bgp.conf >> $SYSTEM_FOLDER/etc/bird4.conf

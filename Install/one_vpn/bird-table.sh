@@ -4,11 +4,11 @@ PATH=/opt/bin:/opt/sbin:/sbin:/bin:/usr/sbin:/usr/bin
 
 start()
 {
-	if [ -z "$(ip rule | awk '/^30001/' )" ]; then
-		ip rule add table 1000 priority 30001
+	if [ -z "$(ip rule | awk '/^30000/' )" ]; then
+		ip rule add table 1000 priority 30000
 	fi
-	if [ -z "$(ip rule | awk '/^30002/' )" ]; then
-		ip rule add table 1001 priority 30002
+	if [ -z "$(ip rule | awk '/^30001/' )" ]; then
+		ip rule add table 1001 priority 30001
 	fi
 }
 

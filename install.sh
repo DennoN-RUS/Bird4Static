@@ -1,21 +1,12 @@
 #!/bin/sh
 
+VERSION="v3.6.0"
+
 while true; do
     echo "Begin install? y/n"
     read yn
     case $yn in
         [Yy]* )
-
-echo "Do you want to use double vpn configuration? 0 - no (default) 1 - yes"
-read conf
-if [ "$conf" != "1" ]; then 
-  conf=0
-  CONFFOLDER="one_vpn"
-  echo "Starting install for one vpn"
-else 
-  CONFFOLDER="double_vpn"
-  echo "Starting install for double vpn"
-fi
 
 # Update busybox
 opkg update
@@ -37,9 +28,20 @@ mkdir -p $SCRIPTS
 mkdir -p $LISTS
 
 # Filling script folders and custom sheets
+echo "Do you want to use double vpn configuration? 1 - no (default) 2 - yes"
+read CONF
+if [ "$CONF" != "2" ]; then 
+  CONF=1
+  CONFFOLDER="one_vpn"
+  echo "You are select install for one vpn"
+else 
+  CONFFOLDER="double_vpn"
+  echo "You are select install for double vpn"
+fi
 
 cp $HOME_FOLDER/Install/common/*.sh $SCRIPTS
 cp $HOME_FOLDER/Install/$CONFFOLDER/*.sh $SCRIPTS
+sed -i 's/VERSIONINPUT/'$VERSION'/; s/CONFINPUT/'$CONF'/; s/SCRIPTSINPUT/'$SCRIPTS'/' $SCRIPTS/*.sh
 chmod +x $SCRIPTS/*.sh
 cp -i $HOME_FOLDER/Install/common/*.list $LISTS
 cp -i $HOME_FOLDER/Install/$CONFFOLDER/*.list $LISTS
@@ -51,15 +53,49 @@ fi
 cp $HOME_FOLDER/Install/$CONFFOLDER/bird4.conf $SYSTEM_FOLDER/etc/bird4.conf
 
 # Getting URL for routing, replacing in scripts
-echo -e "Witch service do you want to use\n 1 - https://antifilter.download/list/allyouneed.lst\n 2 - https://antifilter.network/download/ipsmart.lst\n or enter custom url"
-read FILTER
-if [ "$FILTER" == "1" ]; then
-  sed -i 's/URLINPUT/https:\/\/antifilter.download\/list\/allyouneed.lst/' $SCRIPTS/add-bird4_routes.sh
-elif [ "$FILTER" == "2" ]; then
-  sed -i 's/URLINPUT/https:\/\/antifilter.network\/download\/ipsmart.lst/' $SCRIPTS/add-bird4_routes.sh
+echo -e "Select mode: \n 1 - Download file from antifilter service (default) \n 2 - Use BGP \n 3 - Use Only user files"
+read MODE
+if [ "$MODE" == "2" ]; then 
+  echo "You are select 'BGP mode'"
+elif [ "$MODE" == "3" ]
+  echo "You are select 'File mode'"
 else
-  FILTER=$(echo $FILTER | sed 's/\//\\\//g')
-  sed -i 's/URLINPUT/'$FILTER'/' $SCRIPTS/add-bird4_routes.sh
+  MODE=1
+  echo "You are select 'Download mode'"
+fi
+sed -i 's/MODEINPUT/'$MODE'/' $SCRIPTS/*.sh
+
+if [ "$MODE" == "1" ]; then 
+  # Download mode
+  echo -e "Which service do you want to use\n 1 - https://antifilter.download/list/allyouneed.lst\n 2 - https://antifilter.network/download/ipsmart.lst\n or enter custom url"
+  read FILTER
+  if [ "$FILTER" == "1" ]; then
+    FILTER="https://antifilter.download/list/allyouneed.lst"
+  elif [ "$FILTER" == "2" ]; then
+    FILTER="https://antifilter.network/download/ipsmart.lst"
+  fi
+  echo -e "You are select $FILTER"
+  FILTER="$(echo $FILTER | sed 's/\//\\\//g')"
+  sed -i 's/URLINPUT/'$FILTER'/' $SCRIPTS/*.sh
+else
+  # File mode
+  sed '/$BLACKLIST -/s/^/#/; /$ROUTE_BASE_VPN -/s/^/#/' .$SCRIPTS/add-bird4_routes.sh
+  if [ "$MODE" == "2" ]; then
+  # BGP mode
+    cat $HOME_FOLDER/Install/common/bird4-bgp.conf >> $SYSTEM_FOLDER/etc/bird4.conf
+    echo -e "Which BGP service do you want to use\n 1 - antifilter.download 45.154.73.71 (default) \n 2 - antifilter.network 51.75.66.20 \n 3 - antifilter.network with vpn 10.75.66.20 ( you need install vpn first https://antifilter.network/vpn )"
+    read BGP
+    if [ "$BGP" == "2" ]; then
+      BGP_IP="51.75.66.20" && BGP_AS="65444"
+    elif [ "$BGP" == "3" ]; then
+      BGP_IP="10.75.66.20" && BGP_AS="65444"
+    else
+      BGP_IP="45.154.73.71" && BGP_AS="65432"
+    fi
+    echo -e "You are select BGP $BGP_IP AS$BGP_AS"
+    sed -i 's/BPGIPINPUT/'$BGP_IP'/; s/BGPASINPUT/'$BGP_AS'/' $SYSTEM_FOLDER/etc/bird4.conf
+    sed -i 's/BPGIPINPUT/'$BGP_IP'/; s/BGPASINPUT/'$BGP_AS'/' $SCRIPTS/*.sh
+  fi
 fi
 
 # Reading vpn and provider interfaces, replacing in scripts and bird configuration
@@ -68,30 +104,31 @@ ifconfig | grep -B 1 "inet " | awk '{print $1,$2}' | sed ':a;N;$!ba;s/\n//g;s/\-
 
 echo "Enter the name of the provider interface from the list above (for exaple ppp0 or eth3)"
 read ISP
-sed -i 's/ISPINPUT/'$ISP'/' $SCRIPTS/add-bird4_routes.sh
+sed -i 's/ISPINPUT/'$ISP'/' $SCRIPTS/*.sh
 
 echo "Enter the VPN interface name from the list above (for exaple ovpn_br0 or nwg0)"
 read VPN1
-sed -i 's/VPN1INPUT/'$VPN1'/' $SCRIPTS/add-bird4_routes.sh
+sed -i 's/VPN1INPUT/'$VPN1'/' $SCRIPTS/*.sh
 sed -i 's/VPN1INPUT/'$VPN1'/' $SYSTEM_FOLDER/etc/bird4.conf
 
-if [ "$conf" -eq "1" ]; then 
+if [ "$CONF" == "1" ]; then 
   echo "Enter the Second VPN interface name from the list above (for exaple ovpn_br0 or nwg0)"
   read VPN2
-  sed -i 's/VPN2INPUT/'$VPN2'/' $SCRIPTS/add-bird4_routes.sh
+  sed -i 's/VPN2INPUT/'$VPN2'/' $SCRIPTS/*.sh
   sed -i 's/VPN2INPUT/'$VPN2'/' $SYSTEM_FOLDER/etc/bird4.conf
 fi
 
-sed -i 's/HOMEPATHINPUT/'$HOME_FOLDER_SED'/' $SCRIPTS/add-bird4_routes.sh
-sed -i 's/SYSTEMFOLDERINPUT/'$SYSTEM_FOLDER_SED'/' $SCRIPTS/add-bird4_routes.sh
-sed -i 's/SYSTEMFOLDERINPUT/'$SYSTEM_FOLDER_SED'/g' $SYSTEM_FOLDER/etc/bird4.conf
+sed -i 's/HOMEPATHINPUT/'$HOME_FOLDER_SED'/; s/SYSTEMFOLDERINPUT/'$SYSTEM_FOLDER_SED'/' $SCRIPTS/add-bird4_routes.sh
 
 # Organizing scripts into folders
 ln -sf $SCRIPTS/bird-table.sh $SYSTEM_FOLDER/etc/init.d/S02bird-table
 ln -sf $SCRIPTS/add-bird4_routes.sh $SYSTEM_FOLDER/etc/cron.hourly/
 
+# Remove old generated lists
+rm -r $SYSTEM_FOLDER/etc/bird4*.list
+
 # Starting Services
-$SYSTEM_FOLDER/etc/init.d/S02bird-table start
+$SYSTEM_FOLDER/etc/init.d/S02bird-table restart
 $SCRIPTS/add-bird4_routes.sh
 $SYSTEM_FOLDER/etc/init.d/S10cron start
 $SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 start

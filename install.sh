@@ -57,7 +57,7 @@ echo -e "Select mode: \n 1 - Download file from antifilter service (default) \n 
 read MODE
 if [ "$MODE" == "2" ]; then 
   echo "You are select 'BGP mode'"
-elif [ "$MODE" == "3" ]
+elif [ "$MODE" == "3" ]; then
   echo "You are select 'File mode'"
 else
   MODE=1

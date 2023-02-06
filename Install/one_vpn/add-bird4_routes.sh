@@ -19,7 +19,7 @@ WORK_FILES="$BLACKLIST \
             $ROUTE_FORCE_ISP $ROUTE_FORCE_VPN1 \
             $ROUTE_BASE_VPN \
             $MD5_SUM"
-INIT="$1"
+INIT=$1
 init_files_func $WORK_FILES
 
  #WAIT DNS

@@ -13,6 +13,7 @@ HOMEPATH=HOMEFOLDERINPUT
 source $HOMEPATH/scripts/func.sh
 
  #GET INFO ABOUT SCRIPT
+INPUT=$1
 get_info_func $1
 
  #INIT FILES
@@ -20,7 +21,7 @@ WORK_FILES="$BLACKLIST \
             $ROUTE_FORCE_ISP $ROUTE_FORCE_VPN1 $ROUTE_FORCE_VPN2 \
             $ROUTE_BASE_VPN $ROUTE_USER_VPN \
             $MD5_SUM"
-INIT="$1"
+INIT=$1
 init_files_func $WORK_FILES
 
  #WAIT DNS

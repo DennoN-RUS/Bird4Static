@@ -44,7 +44,7 @@ get_info_func() {
 init_files_func() {
   if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_2: add init files ###########\n" >&2; fi
   touch $@
-  if [[ "$init" == "-i" ]]; then exit; fi
+  if [[ "$INIT" == "-i" ]]; then exit; fi
 }
 
  #WAIT DNS FUNCTION

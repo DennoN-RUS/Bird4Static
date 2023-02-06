@@ -57,9 +57,9 @@ wait_dns_func() {
 vpn_bird_func() {
   if [ "$(grep -c "ifname = \"$2\"; #MARK_VPN1" $1)" == 0 ]; then sed -i '/#MARK_VPN1/s/".*"/"'$2'"/' $1; fi
   if [ "$#" == 2 ]; then
-    if [ "$(grep -c "interface \"$2\"" $1)" == 0 ]; then sed -i 's/interface .*/interface "'$2'";/' $1; fi
+    if [ "$(grep -c "interface \"$2\"" $1)" == 0 ]; then sed -i '/interface/s/".*"/"'$2'"/' $1; fi
   elif [ "$#" == 3 ]; then
-    if [ "$(grep -c "interface \"$2\", \"$3\"" $1)" == 0 ]; then sed -i 's/interface .*/interface "'$2'", "'$3'"/;' $1; fi
+    if [ "$(grep -c "interface \"$2\", \"$3\"" $1)" == 0 ]; then sed -i '/interface/s/".*", ".*"/"'$2'", "'$3'"/' $1; fi
     if [ "$(grep -c "ifname = \"$3\"; #MARK_VPN2" $1)" == 0 ]; then sed -i '/#MARK_VPN2/s/".*"/"'$3'"/' $1; fi
   fi
 }

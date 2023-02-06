@@ -19,7 +19,7 @@ opkg install bird1-ipv4 curl cron bind-dig bind-libs iprange whois diffutils pat
 ABSOLUTE_FILENAME=`readlink -f "$0"`
 HOME_FOLDER=`dirname "$ABSOLUTE_FILENAME"` && HOME_FOLDER_SED=$(echo $HOME_FOLDER | sed 's/\//\\\//g')
 LISTS=$HOME_FOLDER/lists
-SCRIPTS=$HOME_FOLDER/scripts
+SCRIPTS=$HOME_FOLDER/scripts && SCRIPTS_SED=$(echo $SCRIPTS | sed 's/\//\\\//g')
 SYSTEM_FOLDER=`echo $HOME_FOLDER | awk -F/opt '{print $1}'`
 SYSTEM_FOLDER=$SYSTEM_FOLDER/opt && SYSTEM_FOLDER_SED=$(echo $SYSTEM_FOLDER | sed 's/\//\\\//g')
 
@@ -41,7 +41,7 @@ fi
 
 cp $HOME_FOLDER/Install/common/*.sh $SCRIPTS
 cp $HOME_FOLDER/Install/$CONFFOLDER/*.sh $SCRIPTS
-sed -i 's/VERSIONINPUT/'$VERSION'/; s/CONFINPUT/'$CONF'/; s/SCRIPTSINPUT/'$SCRIPTS'/' $SCRIPTS/*.sh
+sed -i 's/VERSIONINPUT/'$VERSION'/; s/CONFINPUT/'$CONF'/; s/SCRIPTSINPUT/'$SCRIPTS_SED'/' $SCRIPTS/*.sh
 chmod +x $SCRIPTS/*.sh
 cp -i $HOME_FOLDER/Install/common/*.list $LISTS
 cp -i $HOME_FOLDER/Install/$CONFFOLDER/*.list $LISTS

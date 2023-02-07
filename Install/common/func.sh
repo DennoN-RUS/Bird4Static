@@ -1,13 +1,75 @@
+ #SCRIPT VARIABLE
+SYSTEM_FOLDER=SYSTEMFOLDERINPUT
+BLACKLIST=$HOMEPATH/lists/antifilter.list
+ROUTE_FORCE_ISP=$SYSTEM_FOLDER/etc/bird4-force-isp.list
+ROUTE_FORCE_VPN1=$SYSTEM_FOLDER/etc/bird4-force-vpn1.list
+ROUTE_FORCE_VPN2=$SYSTEM_FOLDER/etc/bird4-force-vpn2.list
+ROUTE_BASE_VPN=$SYSTEM_FOLDER/etc/bird4-base-vpn.list
+ROUTE_USER_VPN=$SYSTEM_FOLDER/etc/bird4-user-vpn.list
+BIRD_CONF=$SYSTEM_FOLDER/etc/bird4.conf
+VPNTXT=$HOMEPATH/lists/user-vpn.list
+VPN1TXT=$HOMEPATH/lists/user-vpn1.list
+VPN2TXT=$HOMEPATH/lists/user-vpn2.list
+ISPTXT=$HOMEPATH/lists/user-isp.list
+MD5_SUM=$HOMEPATH/scripts/sum.md5
+
+ #INFO VARIABLE
+VERSION=VERSIONINPUT
+SCRIPT_FILE=SCRIPTSINPUT/add-bird4_routes.sh
+VCONF=CONFINPUT
+VHOMEPATH="$(awk -F= '/^HOMEPATH=/{print $2}' $SCRIPT_FILE)"
+VMODE=MODEINPUT
+VURLS="$(awk -F= '/^URLS=/{print $2}' $SCRIPT_FILE)"
+VBGP_IP=BPGIPINPUT && VBGP_AS=BGPASINPUT
+VISP="$(awk -F= '/^ISP=/{print $2}' $SCRIPT_FILE)"
+VVPN1="$(awk -F= '/^VPN1=/{print $2}' $SCRIPT_FILE)"
+VVPN2="$(awk -F= '/^VPN2=/{print $2}' $SCRIPT_FILE)"
+
+ #GET INFO
+get_info_func() {
+  if [[ "$1" == "-v" ]]; then
+    echo "VERSION=$VERSION"
+    echo "CONF=$VCONF"
+    if [ $VCONF == 1 ]; then echo -e " Use one vpn\n ISP=$VISP VPN=$VVPN1"; else echo -e " Use double vpn\n ISP=$VISP VPN1=$VVPN1 VPN2=$VVPN2"; fi
+    echo "MODE=$VMODE"
+    if [ $VMODE == 1 ]; then echo -e " Download mode\n URLS=$VURLS";
+    elif [ $VMODE == 2 ]; then echo -e " BGP mode\n IP=$VBGP_IP AS=$VBGP_AS";
+    else echo " File mode"
+    fi
+  exit
+  fi
+}
+
+ #INIT FILES FUNCTION
+init_files_func() {
+  if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_2: add init files ###########\n" >&2; fi
+  touch $@
+  if [[ "$INIT" == "-i" ]]; then exit; fi
+}
+
  #WAIT DNS FUNCTION
 wait_dns_func() {
   if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_1: wait dns ###########\n" >&2; fi
   until ADDRS=$(dig +short google.com @localhost -p 53) && [ -n "$ADDRS" ] > /dev/null 2>&1; do sleep 5; done 
 } 
 
- #INIT FILES FUNCTION
-init_files_func() {
-  if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_2: add init files ###########\n" >&2; fi
-  touch $@
+ #check VPN in bird config
+vpn_bird_func() {
+  if [ "$(grep -c "ifname = \"$2\"; #MARK_VPN1" $1)" == 0 ]; then sed -i '/#MARK_VPN1/s/".*"/"'$2'"/' $1; fi
+  if [ "$#" == 2 ]; then
+    if [ "$(grep -c "interface \"$2\"" $1)" == 0 ]; then sed -i '/interface/s/".*"/"'$2'"/' $1; fi
+  elif [ "$#" == 3 ]; then
+    if [ "$(grep -c "interface \"$2\", \"$3\"" $1)" == 0 ]; then sed -i '/interface/s/".*", ".*"/"'$2'", "'$3'"/' $1; fi
+    if [ "$(grep -c "ifname = \"$3\"; #MARK_VPN2" $1)" == 0 ]; then sed -i '/#MARK_VPN2/s/".*"/"'$3'"/' $1; fi
+  fi
+}
+
+ #CURL FUNCTION
+curl_funk() {
+  for var in $@; do
+    if [[ $var =~ ^http ]]; then cur_url=$(echo "$cur_url $var"); else last=$var; fi
+  done
+  if [ "$(curl -s $cur_url | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}')" ]; then curl -s $cur_url | sort ; else cat $last; fi
 }
 
  #DIFF FUNCTION
@@ -53,16 +115,6 @@ restart_bird_func() {
     md5sum $SYSTEM_FOLDER/etc/bird4* > $MD5_SUM
     echo "Restarting bird"
     killall -s SIGHUP bird4
-  fi
-}
-
- #CURL FUNCTION
-curl_funk() {
-  if [[ "$DISABLE_URLS" == 0 ]]; then
-    for var in $@; do
-      if [[ $var =~ ^http ]]; then cur_url=$(echo "$cur_url $var"); else last=$var; fi
-    done
-    if [ "$(curl -s $cur_url | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}')" ]; then curl -s $cur_url | sort ; else cat $last; fi
   fi
 }
 

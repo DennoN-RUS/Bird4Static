@@ -74,11 +74,10 @@
 
 2) Выполнить
     ```
-    git restore install.sh
-    git pull
-    chmod +x install.sh
+    ./Bird4Static/update.sh
     ```
-3) Запустить скрипт установки `./install.sh`, главное во время выполнения не соглашаться с перезаписью файлов `user-*.list`
+    Затягивает актуальную версию с репозитория и запускает установку
+3) Во время выполнения не соглашаться с перезаписью файлов `user-*.list`
     ```
     cp: overwrite '/opt/root/Bird4Static/lists/user-isp.list'? n
     cp: overwrite '/opt/root/Bird4Static/lists/user-vpn.list'? n
@@ -90,7 +89,6 @@
 ## Удаление
 Для удаления нужно запустить:
 ```
-  chmod +x ./Bird4Static/uninstall.sh
   ./Bird4Static/uninstall.sh 
 ```
 Далее ответить на вопросы, что удалять, а что оставить из дополнительных пакетов

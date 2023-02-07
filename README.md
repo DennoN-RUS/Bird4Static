@@ -70,14 +70,12 @@
 
 ## Обновление
 
-1) Перейти в папку `Bird4Static`
-
-2) Выполнить
+1) Выполнить
     ```
     ./Bird4Static/update.sh
     ```
     Затягивает актуальную версию с репозитория и запускает установку
-3) Во время выполнения не соглашаться с перезаписью файлов `user-*.list`
+2) Во время выполнения не соглашаться с перезаписью файлов `user-*.list`
     ```
     cp: overwrite '/opt/root/Bird4Static/lists/user-isp.list'? n
     cp: overwrite '/opt/root/Bird4Static/lists/user-vpn.list'? n

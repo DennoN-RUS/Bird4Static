@@ -105,7 +105,7 @@ ip addr show | awk -F" |/" '{gsub(/^ +/,"")}/inet /{print $(NF), $2}'
 echo "Enter the name of the provider interface from the list above (for exaple ppp0 or eth3)"
 read ISP
 sed -i 's/ISPINPUT/'$ISP'/' $SCRIPTS/*.sh
-ISP_IP=$(ip addr show | awk -F" |/" '{gsub(/^ +/,"")}/inet /{print $(NF), $2}' | grep "$ISP" | awk '{print $2}')
+ISP_IP=$(ip addr show $ISP | awk -F" |/" '{gsub(/^ +/,"")}/inet /{print $2}')
 if [[ $ISP_IP =~ ^\([0-9]{1,3}\.\){3}[0-9]{1,3}$ ]]; then echo "Your id is $ISP_IP"; else ISP_IP="123.123.123.123"; fi
 
 echo "Enter the VPN interface name from the list above (for exaple ovpn_br0 or nwg0)"

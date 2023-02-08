@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="v3.6.0"
+VERSION="v3.6.1"
 
 while true; do
     echo -e "\nBegin install? y/n"
@@ -100,11 +100,13 @@ fi
 
 # Reading vpn and provider interfaces, replacing in scripts and bird configuration
 echo -e "\n----------------------"
-ifconfig | grep -B 1 "inet " | awk '{print $1,$2}' | sed ':a;N;$!ba;s/\n//g;s/\--/\n/g' | awk '{print $1,$(NF)}'
+ip addr show | awk -F" |/" '{gsub(/^ +/,"")}/inet /{print $(NF), $2}'
 
 echo "Enter the name of the provider interface from the list above (for exaple ppp0 or eth3)"
 read ISP
 sed -i 's/ISPINPUT/'$ISP'/' $SCRIPTS/*.sh
+ISP_IP=$(ip addr show | awk -F" |/" '{gsub(/^ +/,"")}/inet /{print $(NF), $2}' | grep "$ISP" | awk '{print $2}')
+if [[ $ISP_IP =~ ^\([0-9]{1,3}\.\){3}[0-9]{1,3}$ ]]; then echo "Your id is $ISP_IP"; else ISP_IP="123.123.123.123"; fi
 
 echo "Enter the VPN interface name from the list above (for exaple ovpn_br0 or nwg0)"
 read VPN1
@@ -119,7 +121,7 @@ if [ "$CONF" == "2" ]; then
 fi
 
 sed -i 's/HOMEFOLDERINPUT/'$HOME_FOLDER_SED'/; s/SYSTEMFOLDERINPUT/'$SYSTEM_FOLDER_SED'/' $SCRIPTS/*.sh
-id=$(ip route | awk '/^default/{print $3}') && sed -i 's/IDINPUT/'$id'/' $SYSTEM_FOLDER/etc/bird4.conf
+sed -i 's/IDINPUT/'$ISP_IP'/' $SYSTEM_FOLDER/etc/bird4.conf
 
 # Organizing scripts into folders
 ln -sf $SCRIPTS/bird-table.sh $SYSTEM_FOLDER/etc/init.d/S02bird-table

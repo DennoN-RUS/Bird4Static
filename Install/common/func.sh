@@ -43,7 +43,7 @@ get_info_func() {
  #INIT FILES FUNCTION
 init_files_func() {
   if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_2: add init files ###########\n" >&2; fi
-  touch $@
+  for file in $@; do if [ ! -f $file ]; then touch $file; fi; done
   if [[ "$INIT" == "-i" ]]; then exit; fi
 }
 

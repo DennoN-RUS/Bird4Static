@@ -14,7 +14,7 @@ create_folder_func(){
 
 print_old_conf(){
   if [ -f "$SCRIPTS/add-bird4_routes.sh" ]; then
-    echo "Your current config is:"
+    echo -e "\nYour current config is:"
     $SCRIPTS/add-bird4_routes.sh -v
   fi
 }

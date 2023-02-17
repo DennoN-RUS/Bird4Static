@@ -12,6 +12,13 @@ create_folder_func(){
   mkdir -p $LISTS
 }
 
+print_old_conf(){
+  if [ -f "$SCRIPTS/add-bird4_routes.sh" ]; then
+    echo "Your current config is:"
+    $SCRIPTS/add-bird4_routes.sh
+  fi
+}
+
 # Try get old config
 get_old_config_func(){
   if [ -f "$SCRIPTS/func.sh" ]; then
@@ -26,6 +33,7 @@ get_old_config_func(){
     if [ -n "$VVPN2" ]; then VPN2="$VVPN2"; fi
   fi
 }
+
 
 # Select number vpn
 select_number_vpn_func(){

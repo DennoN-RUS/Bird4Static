@@ -25,6 +25,8 @@ install_packages_func
 # Create start folders
 create_folder_func
 
+print_old_conf
+
 # Try get old config
 if [ "$1" == "-u" ]; then
   UPDATE=1

@@ -11,13 +11,13 @@
 1) Зайти по ssh в среду entware
 
 2) Выполнить:
-```
-  opkg install git git-http
-  git clone https://github.com/DennoN-RUS/Bird4Static.git
-  chmod +x ./Bird4Static/*.sh
-  ./Bird4Static/install.sh 
-```
-Далее выбирать нужные параметры.
+    ```
+      opkg install git git-http
+      git clone https://github.com/DennoN-RUS/Bird4Static.git
+      chmod +x ./Bird4Static/*.sh
+      ./Bird4Static/install.sh 
+    ```
+    Далее выбирать нужные параметры.
 
 Более подробная инструкция установки и описание [тут](https://github.com/DennoN-RUS/Bird4Static/wiki/Установка)
     

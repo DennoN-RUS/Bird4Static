@@ -17,7 +17,7 @@ SYSTEM_FOLDER=`echo $HOME_FOLDER | awk -F/opt '{print $1}'`
 SYSTEM_FOLDER=$SYSTEM_FOLDER/opt && SYSTEM_FOLDER_SED=$(echo $SYSTEM_FOLDER | sed 's/\//\\\//g')
 echo -e "HomeFolder is $HOME_FOLDER \nSystemFolder is $SYSTEM_FOLDER"
 
-source $HOME_FOLDER/Install/install_func
+source $HOME_FOLDER/Install/install_func.sh
 
 # Installing packages
 install_packages_func

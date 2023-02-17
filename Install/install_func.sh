@@ -134,6 +134,7 @@ config_isp_func(){
     echo "Enter the name of the provider interface from the list above (for exaple ppp0 or eth3)"
     read ISP
   fi
+  echo "Your are select ISP $ISP"
   ISP_IP=$(ip addr show $ISP | awk -F" |/" '{gsub(/^ +/,"")}/inet /{print $2}')
   if [ $(echo "$ISP_IP" | grep -cE '^([0-9]{1,3}.){3}[0-9]{1,3}$' ) != 0 ]; then 
     echo "Your id is $ISP_IP"; 
@@ -150,6 +151,7 @@ config_vpn1_func(){
     echo "Enter the VPN interface name from the list above (for exaple ovpn_br0 or nwg0)"
     read VPN1
   fi
+  echo "Your are select VPN1 $VPN1"
   sed -i 's/VPN1INPUT/'$VPN1'/' $SCRIPTS/*.sh
   sed -i 's/VPN1INPUT/'$VPN1'/' $SYSTEM_FOLDER/etc/bird4.conf
 }
@@ -160,6 +162,7 @@ config_vpn2_func(){
     echo "Enter the Second VPN interface name from the list above (for exaple ovpn_br0 or nwg0)"
     read VPN2
   fi
+  echo "Your are select VPN2 $VPN2"
   sed -i 's/VPN2INPUT/'$VPN2'/' $SCRIPTS/*.sh
   sed -i 's/VPN2INPUT/'$VPN2'/' $SYSTEM_FOLDER/etc/bird4.conf
 }

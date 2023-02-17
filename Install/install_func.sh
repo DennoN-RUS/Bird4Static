@@ -14,7 +14,7 @@ create_folder_func(){
 
 # Try get old config
 get_old_config_func(){
-  if [ -f "$SCRIPTS/func.sh" ]: then
+  if [ -f "$SCRIPTS/func.sh" ]; then
     source $SCRIPTS/func.sh
     if [ -n "$VCONF" ]; then CONF="$VCONF"; fi
     if [ -n "$VMODE" ]; then MODE="$VMODE"; fi

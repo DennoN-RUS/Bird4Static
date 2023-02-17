@@ -26,7 +26,10 @@ install_packages_func
 create_folder_func
 
 # Try get old config
-if [ "$1" == "-u" ]; then get_old_config_func; fi
+if [ "$1" == "-u" ]; then
+  UPDATE=1
+  get_old_config_func
+fi
 
 # Select number vpn
 select_number_vpn_func

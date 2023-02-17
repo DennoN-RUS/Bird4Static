@@ -48,8 +48,10 @@ fill_folder_and_sed_func(){
   cp $HOME_FOLDER/Install/common/*.sh $SCRIPTS
   cp $HOME_FOLDER/Install/$CONFFOLDER/*.sh $SCRIPTS
   chmod +x $SCRIPTS/*.sh
-  cp -i $HOME_FOLDER/Install/common/*.list $LISTS
-  cp -i $HOME_FOLDER/Install/$CONFFOLDER/*.list $LISTS
+  if [ "$UPDATE" != "1" ]; then
+    cp -i $HOME_FOLDER/Install/common/*.list $LISTS
+    cp -i $HOME_FOLDER/Install/$CONFFOLDER/*.list $LISTS
+  fi
   sed -i 's/VERSIONINPUT/'$VERSION'/; s/CONFINPUT/'$CONF'/; s/SCRIPTSINPUT/'$SCRIPTS_SED'/' $SCRIPTS/*.sh
   sed -i 's/HOMEFOLDERINPUT/'$HOME_FOLDER_SED'/; s/SYSTEMFOLDERINPUT/'$SYSTEM_FOLDER_SED'/' $SCRIPTS/*.sh
 }

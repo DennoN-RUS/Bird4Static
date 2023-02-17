@@ -101,7 +101,7 @@ configure_file_mode_func(){
 }
 
 # BGP mode
-configure_bgp_mode_func{
+configure_bgp_mode_func(){
   configure_file_mode_func
   cat $HOME_FOLDER/Install/common/bird4-bgp.conf >> $SYSTEM_FOLDER/etc/bird4.conf
   if [ "$1" != "-u" ] && [ -z "$BGP_IP" ] && [ -z "$BGP_AS" ]; then

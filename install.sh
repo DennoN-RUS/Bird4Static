@@ -28,10 +28,10 @@ create_folder_func
 print_old_conf
 
 # Try get old config
-if [ "$1" == "-u" ]; then
-  UPDATE=1
-  get_old_config_func
-fi
+if [ "$1" == "-u" ]; then UPDATE=1 && get_old_config_func; fi
+
+# Stop service if exist
+stop_func
 
 # Select number vpn
 select_number_vpn_func

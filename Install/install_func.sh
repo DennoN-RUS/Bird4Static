@@ -34,6 +34,14 @@ get_old_config_func(){
   fi
 }
 
+stop_func(){
+  if [ -f "$SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4" ]; then
+    $SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 stop
+  fi
+  if [ -f "$SYSTEM_FOLDER/etc/init.d/S02bird-table" ]; then
+    $SYSTEM_FOLDER/etc/init.d/S02bird-table stop
+  fi
+}
 
 # Select number vpn
 select_number_vpn_func(){

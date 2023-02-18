@@ -183,7 +183,9 @@ ln_scripts_func(){
 
 # Remove old generated lists
 rm_old_list_func(){
-  rm -r $SYSTEM_FOLDER/etc/bird4*.list
+  if [ -f $SYSTEM_FOLDER/etc/bird4*.list ]; then
+    rm -r $SYSTEM_FOLDER/etc/bird4*.list
+  fi
 }
 
 # Starting Services

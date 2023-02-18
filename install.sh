@@ -25,13 +25,14 @@ install_packages_func
 # Create start folders
 create_folder_func
 
+# Stop service if exist
+stop_func
+
+# Print current configuration
 print_old_conf
 
 # Try get old config
 if [ "$1" == "-u" ]; then UPDATE=1 && get_old_config_func; fi
-
-# Stop service if exist
-stop_func
 
 # Select number vpn
 select_number_vpn_func

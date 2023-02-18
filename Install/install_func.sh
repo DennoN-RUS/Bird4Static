@@ -12,6 +12,19 @@ create_folder_func(){
   mkdir -p $LISTS
 }
 
+# Stop service if exist
+stop_func(){
+  if [ -f "$SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4" ]; then
+    echo "Stop bird"
+    $SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 stop
+  fi
+  if [ -f "$SYSTEM_FOLDER/etc/init.d/S02bird-table" ]; then
+    echo "Stop bird-table"
+    $SYSTEM_FOLDER/etc/init.d/S02bird-table stop
+  fi
+}
+
+# Print current configuration
 print_old_conf(){
   if [ -f "$SCRIPTS/add-bird4_routes.sh" ]; then
     echo -e "\nYour current config is:"
@@ -31,15 +44,6 @@ get_old_config_func(){
     if [ -n "$VISP" ]; then ISP="$VISP"; fi
     if [ -n "$VVPN1" ]; then VPN1="$VVPN1"; fi
     if [ -n "$VVPN2" ]; then VPN2="$VVPN2"; fi
-  fi
-}
-
-stop_func(){
-  if [ -f "$SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4" ]; then
-    $SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 stop
-  fi
-  if [ -f "$SYSTEM_FOLDER/etc/init.d/S02bird-table" ]; then
-    $SYSTEM_FOLDER/etc/init.d/S02bird-table stop
   fi
 }
 

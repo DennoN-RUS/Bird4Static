@@ -7,4 +7,4 @@ $SYSTEM_FOLDER/bin/git restore *.sh Install/*
 $SYSTEM_FOLDER/bin/git status
 $SYSTEM_FOLDER/bin/git pull
 chmod +x *.sh
-./install.sh -u
+sh ./install.sh -u

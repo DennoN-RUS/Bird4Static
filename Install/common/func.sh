@@ -67,9 +67,9 @@ vpn_bird_func() {
  #CURL FUNCTION
 curl_funk() {
   for var in $@; do
-    if [ $(echo "$var" | grep -cE '^htt(p|ps)://') != 0 ]; then cur_url=$(echo "$cur_url $var"); else last=$var; fi
+    if [ $(echo "$var" | grep -cE '^(ht|f)t(p|ps)://') != 0 ]; then cur_url=$(echo "$cur_url $var"); else last=$var; fi
   done
-  if [ "$($SYSTEM_FOLDER/bin/curl -s $cur_url | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}')" ]; then $SYSTEM_FOLDER/bin/curl -s $cur_url | sort ; else cat $last; fi
+  if [ "$(curl -sk $cur_url | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}')" ]; then curl -sk $cur_url | sort ; else cat $last; fi
 }
 
  #DIFF FUNCTION

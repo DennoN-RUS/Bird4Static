@@ -37,7 +37,7 @@ get_info_func() {
     else echo " File mode"
     fi
   exit
-  fi
+  elif [[ "$1" == "-d" ]]; then DEBUG=1; fi
 }
 
  #INIT FILES FUNCTION

@@ -21,25 +21,25 @@ $SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 stop
 
 # Remove packages
 # bird
-opkg remove bird1-ipv4
+$SYSTEM_FOLDER/bin/opkg remove bird1-ipv4
 # curl
 answer=0; echo "Do you want remove 'curl'? 0 - no 1 - yes (default: no)"; read answer
-if [ "$answer" = "1" ]; then opkg remove curl; fi
+if [ "$answer" = "1" ]; then $SYSTEM_FOLDER/bin/opkg remove curl; fi
 # cron
 answer=0; echo "Do you want remove 'cron'? 0 - no 1 - yes (default: no)"; read answer
-if [ "$answer" = "1" ]; then opkg remove cron; fi
+if [ "$answer" = "1" ]; then $SYSTEM_FOLDER/bin/opkg remove cron; fi
 # bind-dig
 answer=0; echo "Do you want remove 'bind-dig'? 0 - no 1 - yes (default: no)"; read answer
-if [ "$answer" = "1" ]; then opkg remove bind-dig bind-libs; fi
+if [ "$answer" = "1" ]; then $SYSTEM_FOLDER/bin/opkg remove bind-dig bind-libs; fi
 # iprange
 answer=0; echo "Do you want remove 'iprange'? 0 - no 1 - yes (default: no)"; read answer
-if [ "$answer" = "1" ]; then opkg remove iprange; fi
+if [ "$answer" = "1" ]; then $SYSTEM_FOLDER/bin/opkg remove iprange; fi
 # whois
 answer=0; echo "Do you want remove 'whois'? 0 - no 1 - yes (default: no)"; read answer
-if [ "$answer" = "1" ]; then opkg remove whois; fi
+if [ "$answer" = "1" ]; then $SYSTEM_FOLDER/bin/opkg remove whois; fi
 # diff and patch
 answer=0; echo "Do you want remove 'diffutils' and 'patch'? 0 - no 1 - yes (default: no)"; read answer
-if [ "$answer" = "1" ]; then opkg remove diffutils patch; fi
+if [ "$answer" = "1" ]; then $SYSTEM_FOLDER/bin/opkg remove diffutils patch; fi
 
 # Remove start folders
 rm -r $SCRIPTS

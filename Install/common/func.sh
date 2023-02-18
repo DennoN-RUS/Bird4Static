@@ -69,7 +69,7 @@ curl_funk() {
   for var in $@; do
     if [ $(echo "$var" | grep -cE '^htt(p|ps)://') != 0 ]; then cur_url=$(echo "$cur_url $var"); else last=$var; fi
   done
-  if [ "$(curl -s $cur_url | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}')" ]; then curl -s $cur_url | sort ; else cat $last; fi
+  if [ "$($SYSTEM_FOLDER/bin/curl -s $cur_url | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}')" ]; then $SYSTEM_FOLDER/bin/curl -s $cur_url | sort ; else cat $last; fi
 }
 
  #DIFF FUNCTION

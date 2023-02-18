@@ -196,6 +196,9 @@ ln_scripts_func(){
 # Remove old generated lists
 rm_old_list_func(){
   find $SYSTEM_FOLDER/etc/ -type f -name bird4*.list -exec rm -f {} \;
+  if [ -f $SCRIPTS/sum.md5 ]; then
+    rm $SCRIPTS/sum.md5
+  fi
 }
 
 # Starting Services

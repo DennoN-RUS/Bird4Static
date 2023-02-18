@@ -37,7 +37,7 @@ get_info_func() {
     else echo " File mode"
     fi
   exit
-  fi
+  elif [[ "$1" == "-d" ]]; then DEBUG=1; fi
 }
 
  #INIT FILES FUNCTION
@@ -67,7 +67,7 @@ vpn_bird_func() {
  #CURL FUNCTION
 curl_funk() {
   for var in $@; do
-    if [[ $var =~ ^http ]]; then cur_url=$(echo "$cur_url $var"); else last=$var; fi
+    if [ $(echo "$var" | grep -cE '^htt(p|ps)://') != 0 ]; then cur_url=$(echo "$cur_url $var"); else last=$var; fi
   done
   if [ "$(curl -s $cur_url | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}')" ]; then curl -s $cur_url | sort ; else cat $last; fi
 }
@@ -103,7 +103,7 @@ fi
 
  #IPRANGE FUNCTION
 ipr_func() {
-  if [[ $1 =~ ^\([0-9]{1,3}\.\){3}[0-9]{1,3}$ ]]; then cur_gw=$1 ; else cur_gw=\"$1\"; fi
+  if [ $(echo "$1" | grep -cE '^([0-9]{1,3}.){3}[0-9]{1,3}$' ) != 0 ]; then cur_gw=$1 ; else cur_gw=\"$1\"; fi
   if [[ "$DEBUG" == 1 ]]; then ipr_verb="-v"; echo -e "\n########### $(date) STEP_4: ipr func file $(echo $2 | awk -F/ '{print $NF}' ) ###########\n" >&2; fi
   get_as_func "$2" | iprange $ipr_verb --print-prefix "route " --print-suffix-nets " via $cur_gw;" --print-suffix-ips "/32 via $cur_gw;" -
 }

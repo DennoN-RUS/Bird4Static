@@ -6,4 +6,4 @@ chmod -x *.sh
 git status
 git pull
 chmod +x *.sh
-./install.sh
+./install.sh -u

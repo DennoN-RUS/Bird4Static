@@ -5,19 +5,19 @@ PATH=/opt/bin:/opt/sbin:/sbin:/bin:/usr/sbin:/usr/bin
 start()
 {
 	if [ -z "$(ip rule | awk '/^30000/')" ]; then
-		ip rule add table force priority 30000
+		ip rule add table 1000 priority 30000
 	fi
 	if [ -z "$(ip rule | awk '/^30001/')" ]; then
-		ip rule add table vpn1 priority 30001
+		ip rule add table 1001 priority 30001
 	fi
 }
 
 stop(){
 	if [ -n "$(ip rule | awk '/^30000/')" ]; then
-		ip rule del table force
+		ip rule del table 1000
 	fi
 	if [ -n "$(ip rule | awk '/^30001/')" ]; then
-		ip rule del table vpn1
+		ip rule del table 1001
 	fi
 }
 

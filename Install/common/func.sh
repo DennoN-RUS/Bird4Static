@@ -36,7 +36,7 @@ get_info_func() {
     elif [ $VMODE == 2 ]; then echo -e " BGP mode\n IP=$VBGP_IP AS=$VBGP_AS";
     else echo " File mode"
     fi
-  exit
+    exit
   elif [[ "$1" == "-d" ]]; then DEBUG=1; fi
 }
 

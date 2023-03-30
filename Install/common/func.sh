@@ -92,7 +92,7 @@ get_as_func() {
     for cur_as in $as_list; do
       if [[ "$DEBUG" == 1 ]]; then out=2; echo -e "\n$cur_as" >&$out; fi
       for i in $out 1; do
-        curl -s https://stat.ripe.net/data/announced-prefixes/data.json?resource=$cur_as | awk -F '"' '/([0-9]{1,3}.){3}[0-9]{1,3}\/[0-9]{1,2}/{print $4}' | iprange - >&$i
+        curl -sk https://stat.ripe.net/data/announced-prefixes/data.json?resource=$cur_as | awk -F '"' '/([0-9]{1,3}.){3}[0-9]{1,3}\/[0-9]{1,2}/{print $4}' | iprange - >&$i
        done
     done
       awk '!/^AS([0-9]{1,5})/{print $0}' "$1"

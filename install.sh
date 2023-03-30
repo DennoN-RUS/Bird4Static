@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="v3.7.0"
+VERSION="v3.7.1"
 
 while true; do
     echo -e "\nBegin install? y/n"

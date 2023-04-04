@@ -6,7 +6,7 @@ ROUTE_FORCE_VPN1=$SYSTEM_FOLDER/etc/bird4-force-vpn1.list
 ROUTE_FORCE_VPN2=$SYSTEM_FOLDER/etc/bird4-force-vpn2.list
 ROUTE_BASE_VPN=$SYSTEM_FOLDER/etc/bird4-base-vpn.list
 ROUTE_USER_VPN=$SYSTEM_FOLDER/etc/bird4-user-vpn.list
-BIRD_CONF=$SYSTEM_FOLDER/etc/bird4.conf
+BIRD_CONF=$SYSTEM_FOLDER/etc/bird.conf
 VPNTXT=$HOMEPATH/lists/user-vpn.list
 VPN1TXT=$HOMEPATH/lists/user-vpn1.list
 VPN2TXT=$HOMEPATH/lists/user-vpn2.list
@@ -111,10 +111,10 @@ ipr_func() {
  #RESTART BIRD FUNCTION
 restart_bird_func() {
   if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_5: restart bird ###########\n" >&2; fi
-  if [ "$(cat $MD5_SUM)" != "$(md5sum $SYSTEM_FOLDER/etc/bird4*)" ]; then
-    md5sum $SYSTEM_FOLDER/etc/bird4* > $MD5_SUM
+  if [ "$(cat $MD5_SUM)" != "$(md5sum $SYSTEM_FOLDER/etc/bird*)" ]; then
+    md5sum $SYSTEM_FOLDER/etc/bird* > $MD5_SUM
     echo "Restarting bird"
-    killall -s SIGHUP bird4
+    killall -s SIGHUP bird
   fi
 }
 

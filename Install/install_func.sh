@@ -3,7 +3,7 @@ install_packages_func(){
   $SYSTEM_FOLDER/bin/opkg update
   $SYSTEM_FOLDER/bin/opkg upgrade busybox
   # Installing packages
-  $SYSTEM_FOLDER/bin/opkg install bird1-ipv4 curl cron bind-dig bind-libs iprange whois diffutils patch
+  $SYSTEM_FOLDER/bin/opkg install bird2 bird2c curl cron bind-dig bind-libs iprange whois diffutils patch
 }
 
 # Create start folders
@@ -17,6 +17,12 @@ stop_func(){
   if [ -f "$SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4" ]; then
     echo "Stop bird"
     $SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 stop
+    $SYSTEM_FOLDER/bin/opkg remove bird1-ipv4 bird1cl-ipv4
+    rm $SYSTEM_FOLDER/etc/bird4.conf
+  fi
+  if [ -f "$SYSTEM_FOLDER/etc/init.d/S70bird" ]; then
+    echo "Stop bird2"
+    $SYSTEM_FOLDER/etc/init.d/S70bird stop
   fi
   if [ -f "$SYSTEM_FOLDER/etc/init.d/S02bird-table" ]; then
     echo "Stop bird-table"
@@ -78,10 +84,10 @@ fill_folder_and_sed_func(){
 
 # Copying the bird configuration file
 copy_bird_config_func(){
-  if [ ! -f "$SYSTEM_FOLDER/etc/bird4.conf-opkg" ]; then
-    mv $SYSTEM_FOLDER/etc/bird4.conf $SYSTEM_FOLDER/etc/bird4.conf-opkg;
+  if [ ! -f "$SYSTEM_FOLDER/etc/bird.conf-opkg" ]; then
+    mv $SYSTEM_FOLDER/etc/bird.conf $SYSTEM_FOLDER/etc/bird.conf-opkg;
   fi
-  cp $HOME_FOLDER/Install/$CONFFOLDER/bird4.conf $SYSTEM_FOLDER/etc/bird4.conf
+  cp $HOME_FOLDER/Install/$CONFFOLDER/bird.conf $SYSTEM_FOLDER/etc/bird.conf
 }
 
 # Select mode
@@ -125,7 +131,7 @@ configure_file_mode_func(){
 # BGP mode
 configure_bgp_mode_func(){
   configure_file_mode_func
-  cat $HOME_FOLDER/Install/common/bird4-bgp.conf >> $SYSTEM_FOLDER/etc/bird4.conf
+  cat $HOME_FOLDER/Install/common/bird-bgp.conf >> $SYSTEM_FOLDER/etc/bird.conf
   if [ "$1" != "-u" ] && [ -z "$BGP_IP" ] && [ -z "$BGP_AS" ]; then
     echo -e "Which BGP service do you want to use\n 1 - antifilter.download 45.154.73.71 (default) \n 2 - antifilter.network 51.75.66.20 \n 3 - antifilter.network with vpn 10.75.66.20 ( you need install vpn first https://antifilter.network/vpn )"
     read BGP
@@ -138,7 +144,7 @@ configure_bgp_mode_func(){
     fi
   fi
   echo -e "You are select BGP $BGP_IP AS$BGP_AS"
-  sed -i 's/BPGIPINPUT/'$BGP_IP'/; s/BGPASINPUT/'$BGP_AS'/' $SYSTEM_FOLDER/etc/bird4.conf
+  sed -i 's/BPGIPINPUT/'$BGP_IP'/; s/BGPASINPUT/'$BGP_AS'/' $SYSTEM_FOLDER/etc/bird.conf
   sed -i 's/BPGIPINPUT/'$BGP_IP'/; s/BGPASINPUT/'$BGP_AS'/' $SCRIPTS/*.sh
 }
 
@@ -162,7 +168,7 @@ config_isp_func(){
     ISP_IP="123.123.123.123";
   fi
   sed -i 's/ISPINPUT/'$ISP'/' $SCRIPTS/*.sh
-  sed -i 's/IDINPUT/'$ISP_IP'/' $SYSTEM_FOLDER/etc/bird4.conf
+  sed -i 's/IDINPUT/'$ISP_IP'/' $SYSTEM_FOLDER/etc/bird.conf
 }
 
 # Config VPN1
@@ -173,7 +179,7 @@ config_vpn1_func(){
   fi
   echo "Your are select VPN1 $VPN1"
   sed -i 's/VPN1INPUT/'$VPN1'/' $SCRIPTS/*.sh
-  sed -i 's/VPN1INPUT/'$VPN1'/' $SYSTEM_FOLDER/etc/bird4.conf
+  sed -i 's/VPN1INPUT/'$VPN1'/' $SYSTEM_FOLDER/etc/bird.conf
 }
 
 # Config VPN2
@@ -184,7 +190,7 @@ config_vpn2_func(){
   fi
   echo "Your are select VPN2 $VPN2"
   sed -i 's/VPN2INPUT/'$VPN2'/' $SCRIPTS/*.sh
-  sed -i 's/VPN2INPUT/'$VPN2'/' $SYSTEM_FOLDER/etc/bird4.conf
+  sed -i 's/VPN2INPUT/'$VPN2'/' $SYSTEM_FOLDER/etc/bird.conf
 }
 
 # Organizing scripts into folders
@@ -206,6 +212,6 @@ run_func(){
   $SYSTEM_FOLDER/etc/init.d/S02bird-table restart
   $SCRIPTS/add-bird4_routes.sh -i
   $SYSTEM_FOLDER/etc/init.d/S10cron restart
-  $SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 restart
+  $SYSTEM_FOLDER/etc/init.d/S70bird restart
   $SCRIPTS/add-bird4_routes.sh
 }

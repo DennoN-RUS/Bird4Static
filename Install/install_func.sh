@@ -19,6 +19,7 @@ stop_func(){
     $SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 stop
     $SYSTEM_FOLDER/bin/opkg remove bird1-ipv4 bird1cl-ipv4
     rm $SYSTEM_FOLDER/etc/bird4.conf
+    install_packages_func
   fi
   if [ -f "$SYSTEM_FOLDER/etc/init.d/S70bird" ]; then
     echo "Stop bird2"

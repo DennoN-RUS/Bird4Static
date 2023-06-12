@@ -14,6 +14,7 @@ create_folder_func(){
 
 # Stop service if exist
 stop_func(){
+  # Stop and remove old bird if exist
   if [ -f "$SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4" ]; then
     echo "Stop bird"
     $SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 stop
@@ -21,10 +22,12 @@ stop_func(){
     rm $SYSTEM_FOLDER/etc/bird4.conf
     install_packages_func
   fi
+  # Stop bird2
   if [ -f "$SYSTEM_FOLDER/etc/init.d/S70bird" ]; then
     echo "Stop bird2"
     $SYSTEM_FOLDER/etc/init.d/S70bird stop
   fi
+  # Stop table service
   if [ -f "$SYSTEM_FOLDER/etc/init.d/S02bird-table" ]; then
     echo "Stop bird-table"
     $SYSTEM_FOLDER/etc/init.d/S02bird-table stop

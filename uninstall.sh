@@ -19,11 +19,11 @@ while true; do
 $SYSTEM_FOLDER/etc/init.d/S02bird-table stop
 if [ -f "$SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4" ]; then
     $SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 stop
-    $SYSTEM_FOLDER/bin/opkg remove bird1-ipv4
+    $SYSTEM_FOLDER/bin/opkg --force-removal-of-dependent-packages remove bird1-ipv4
 fi
 if [ -f "$SYSTEM_FOLDER/etc/init.d/S70bird" ]; then
     $SYSTEM_FOLDER/etc/init.d/S70bird stop
-    $SYSTEM_FOLDER/bin/opkg remove bird2 bird2c
+    $SYSTEM_FOLDER/bin/opkg --force-removal-of-dependent-packages remove bird2
 fi
 
 # Remove packages

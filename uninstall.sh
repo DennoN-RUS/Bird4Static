@@ -17,11 +17,16 @@ while true; do
 
 # Stop Services
 $SYSTEM_FOLDER/etc/init.d/S02bird-table stop
-$SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 stop
+if [ -f "$SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4" ]; then
+    $SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 stop
+    $SYSTEM_FOLDER/bin/opkg --force-removal-of-dependent-packages remove bird1-ipv4
+fi
+if [ -f "$SYSTEM_FOLDER/etc/init.d/S70bird" ]; then
+    $SYSTEM_FOLDER/etc/init.d/S70bird stop
+    $SYSTEM_FOLDER/bin/opkg --force-removal-of-dependent-packages remove bird2
+fi
 
 # Remove packages
-# bird
-$SYSTEM_FOLDER/bin/opkg remove bird1-ipv4
 # curl
 answer=0; echo "Do you want remove 'curl'? 0 - no 1 - yes (default: no)"; read answer
 if [ "$answer" = "1" ]; then $SYSTEM_FOLDER/bin/opkg remove curl; fi

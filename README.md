@@ -21,6 +21,6 @@
 
 Более подробная инструкция установки и описание [тут](https://github.com/DennoN-RUS/Bird4Static/wiki/Установка)
 
-Канал в телеграмме: [тут](https://t.me/bird4static)
+Канал в телеграме: [тут](https://t.me/bird4static)
 
-Чат в телеграмме: [тут](https://t.me/bird4static_chat)
+Чат в телеграме: [тут](https://t.me/bird4static_chat)

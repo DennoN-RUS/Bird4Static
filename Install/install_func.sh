@@ -224,7 +224,7 @@ run_func(){
 install_ipset4static(){
   echo -e "Do you want install IPset4Static addon? y/n"
   read ANS
-  if [ "ANS" == "y" ]; then
+  if [ "$ANS" == "y" ]; then
     cd $HOME_FOLDER
     git clone https://github.com/DennoN-RUS/IPset4Static.git
     chmod +x ./IPset4Static/*.sh

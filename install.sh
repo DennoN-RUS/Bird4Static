@@ -66,7 +66,7 @@ run_func
 
 #IPset4Static addon
 if [ -d "$HOME_FOLDER/IPset4Static" ]; then
-  echo "Found iPset4Static\nDo you want to try update it y/n"
+  echo -e "\nFound iPset4Static\nDo you want to try update it y/n"
   read ANS
   if [ "$ANS" == "y" ]; then
     sh $HOME_FOLDER/IPset4Static/update.sh

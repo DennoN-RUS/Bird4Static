@@ -70,6 +70,7 @@ if [ -d "$HOME_FOLDER/IPset4Static" ]; then
   read ANS
   if [ "$ANS" == "y" ]; then
     sh $HOME_FOLDER/IPset4Static/update.sh
+  fi
 else
   install_ipset4static
 fi

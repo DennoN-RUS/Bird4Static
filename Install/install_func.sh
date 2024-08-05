@@ -3,7 +3,7 @@ install_packages_func(){
   $SYSTEM_FOLDER/bin/opkg update
   $SYSTEM_FOLDER/bin/opkg upgrade busybox
   # Installing packages
-  $SYSTEM_FOLDER/bin/opkg install bird2 bird2c curl cron bind-dig bind-libs iprange whois diffutils patch jq
+  $SYSTEM_FOLDER/bin/opkg install bird2 bird2c curl cron bind-dig bind-libs iprange whois diffutils patch
 }
 
 # Create start folders

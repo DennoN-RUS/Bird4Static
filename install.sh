@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION_NEW="v3.8.1"
+VERSION_NEW="v3.9"
 
 while true; do
     echo -e "\nBegin install? y/n"
@@ -63,6 +63,8 @@ rm_old_list_func
 
 # Starting Services
 run_func
+
+install_ipset4static
 
 exit 0
 ;;

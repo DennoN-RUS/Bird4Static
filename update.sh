@@ -8,3 +8,5 @@ $SYSTEM_FOLDER/bin/git status
 $SYSTEM_FOLDER/bin/git pull
 chmod +x *.sh
 sh ./install.sh -u
+
+if 

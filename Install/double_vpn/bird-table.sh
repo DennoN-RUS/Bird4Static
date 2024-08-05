@@ -3,26 +3,26 @@
 PATH=/opt/bin:/opt/sbin:/sbin:/bin:/usr/sbin:/usr/bin
 
 start(){
-	if [ -z "$(ip rule | awk '/^30000/')" ]; then
-		ip rule add table 1000 priority 30000
+	if [ -z "$(ip rule | awk '/^30020/')" ]; then
+		ip rule add table 1020 priority 30020
 	fi
-	if [ -z "$(ip rule | awk '/^30001/')" ]; then
-		ip rule add table 1001 priority 30001
+	if [ -z "$(ip rule | awk '/^30021/')" ]; then
+		ip rule add table 1021 priority 30021
 	fi
-	if [ -z "$(ip rule | awk '/^30002/')" ]; then
-		ip rule add table 1002 priority 30002
+	if [ -z "$(ip rule | awk '/^30022/')" ]; then
+		ip rule add table 1022 priority 30022
 	fi
 }
 
 stop(){
-	if [ -n "$(ip rule | awk '/^30000/')" ]; then
-		ip rule del table 1000
+	if [ -n "$(ip rule | awk '/^30020/')" ]; then
+		ip rule del table 1020
 	fi
-	if [ -n "$(ip rule | awk '/^30001/')" ]; then
-		ip rule del table 1001
+	if [ -n "$(ip rule | awk '/^30021/')" ]; then
+		ip rule del table 1021
 	fi
-	if [ -n "$(ip rule | awk '/^30002/')" ]; then
-		ip rule del table 1002
+	if [ -n "$(ip rule | awk '/^30022/')" ]; then
+		ip rule del table 1022
 	fi
 }
 

@@ -219,3 +219,15 @@ run_func(){
   $SYSTEM_FOLDER/etc/init.d/S70bird restart
   $SCRIPTS/add-bird4_routes.sh
 }
+
+# Get addon ipset
+install_ipset4static(){
+  echo -e "Do you want install IPset4Static addon? y/n"
+  read ANS
+  if [ "$ANS" == "y" ]; then
+    cd $HOME_FOLDER
+    git clone https://github.com/DennoN-RUS/IPset4Static.git
+    chmod +x ./IPset4Static/*.sh
+    ./IPset4Static/install.sh
+  fi
+}

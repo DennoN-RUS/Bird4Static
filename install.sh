@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION_NEW="v3.8.1"
+VERSION_NEW="v3.9"
 
 while true; do
     echo -e "\nBegin install? y/n"
@@ -63,6 +63,17 @@ rm_old_list_func
 
 # Starting Services
 run_func
+
+#IPset4Static addon
+if [ -d "$HOME_FOLDER/IPset4Static" ]; then
+  echo -e "\nFound iPset4Static\nDo you want to try update it y/n"
+  read ANS
+  if [ "$ANS" == "y" ]; then
+    sh $HOME_FOLDER/IPset4Static/update.sh
+  fi
+else
+  install_ipset4static
+fi
 
 exit 0
 ;;

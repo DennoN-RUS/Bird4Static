@@ -56,6 +56,15 @@ rm $SYSTEM_FOLDER/etc/cron.hourly/add-bird4_routes.sh
 # Remove bird lists
 rm -r $SYSTEM_FOLDER/etc/bird4*.list
 
+#IPset4Static addon
+if [ -d "$HOME_FOLDER/IPset4Static" ]; then
+  echo -e "\nFound iPset4Static\nDo you want uninstall it? y/n"
+  read ANS
+  if [ "$ANS" == "y" ]; then
+    sh $HOME_FOLDER/IPset4Static/uninstal.sh
+  fi
+fi
+
 exit 0
 ;;
         [Nn]* ) exit 0;;

@@ -161,7 +161,7 @@ show_interfaces_func(){
 # Config ISP
 config_isp_func(){
   if [ -z "$ISP" ]; then
-    echo "Enter the name of the provider interface from the list above (for exaple ppp0 or eth3)"
+    echo "Enter the name of the provider interface from the list above (for example ppp0 or eth3)"
     read ISP
   fi
   echo "Your are select ISP $ISP"
@@ -178,7 +178,7 @@ config_isp_func(){
 # Config VPN1
 config_vpn1_func(){
   if [ -z "$VPN1" ]; then
-    echo "Enter the VPN interface name from the list above (for exaple ovpn_br0 or nwg0)"
+    echo "Enter the VPN interface name from the list above (for example ovpn_br0 or nwg0)"
     read VPN1
   fi
   echo "Your are select VPN1 $VPN1"
@@ -189,7 +189,7 @@ config_vpn1_func(){
 # Config VPN2
 config_vpn2_func(){
   if [ -z "$VPN2" ]; then
-    echo "Enter the Second VPN interface name from the list above (for exaple ovpn_br0 or nwg0)"
+    echo "Enter the Second VPN interface name from the list above (for example ovpn_br0 or nwg0)"
     read VPN2
   fi
   echo "Your are select VPN2 $VPN2"

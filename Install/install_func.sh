@@ -217,7 +217,7 @@ run_func(){
   $SCRIPTS/add-bird4_routes.sh -i
   $SYSTEM_FOLDER/etc/init.d/S10cron restart
   $SYSTEM_FOLDER/etc/init.d/S70bird restart
-  $SCRIPTS/add-bird4_routes.sh
+  $SCRIPTS/add-bird4_routes.sh -d
 }
 
 # Get addon ipset

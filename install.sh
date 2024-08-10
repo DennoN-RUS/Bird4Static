@@ -65,7 +65,7 @@ rm_old_list_func
 run_func
 
 #IPset4Static addon
-if [ -d "$HOME_FOLDER/IPset4Static" ]; then
+if [ -d "$HOME_FOLDER/IPset4Static" ] && [ -f "$SYSTEM_FOLDER/etc/init.d/S03ipset-table" ]; then
   echo -e "\nFound iPset4Static\nDo you want to try update it y/n"
   read ANS
   if [ "$ANS" == "y" ]; then

@@ -61,7 +61,7 @@ if [ -d "$HOME_FOLDER/IPset4Static" ]; then
   echo -e "\nFound iPset4Static\nDo you want uninstall it? y/n"
   read ANS
   if [ "$ANS" == "y" ]; then
-    sh $HOME_FOLDER/IPset4Static/uninstal.sh
+    sh $HOME_FOLDER/IPset4Static/uninstall.sh
   fi
 fi
 

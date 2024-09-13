@@ -140,7 +140,7 @@ configure_bgp_mode_func(){
     echo -e "Which BGP service do you want to use\n 1 - antifilter.download 45.154.73.71 (default) \n 2 - antifilter.network 51.75.66.20 \n 3 - antifilter.network with vpn 10.75.66.20 ( you need install vpn first https://antifilter.network/vpn )"
     read BGP
     if [ "$BGP" == "2" ]; then
-      BGP_IP="51.75.66.20" && BGP_AS="65444"
+      BGP_IP="45.148.244.55" && BGP_AS="65444"
     elif [ "$BGP" == "3" ]; then
       BGP_IP="10.75.66.20" && BGP_AS="65444"
     else

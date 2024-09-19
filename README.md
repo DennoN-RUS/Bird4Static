@@ -26,4 +26,4 @@
 
 Чат в телеграме: [тут](https://t.me/bird4static_chat)
 
-Поддержать проект можно [тут](https://yoomoney.ru/to/41001872039390)
+Поддержать проект можно через [yoomoney](https://yoomoney.ru/to/41001872039390) и [cloudtips](https://pay.cloudtips.ru/p/76ea7dde)

@@ -12,10 +12,10 @@
 
 2) Выполнить:
     ```bash
-      opkg install git git-http
-      git clone https://github.com/DennoN-RUS/Bird4Static.git
-      chmod +x ./Bird4Static/*.sh
-      ./Bird4Static/install.sh 
+    opkg install git git-http
+    git clone https://github.com/DennoN-RUS/Bird4Static.git
+    chmod +x ./Bird4Static/*.sh
+    ./Bird4Static/install.sh 
     ```
     Далее выбирать нужные параметры.
 

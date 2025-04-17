@@ -2,7 +2,7 @@
 
  #USER VARIABLE
 ISP=ISPINPUT
-#ISP_GW=$(ip route | grep -m 1 -E "via.*$ISP_NAME" | awk '{print $3}')
+#ISP_GW=$(ip route | grep -m 1 -E "via.*$ISP" | awk '{print $3}')
 VPN1=VPN1INPUT
 URLS="URLINPUT"
 

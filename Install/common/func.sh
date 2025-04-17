@@ -22,6 +22,7 @@ VMODE=MODEINPUT
 VURLS="$(awk -F= '/^URLS=/{print $2}' $SCRIPT_FILE)"
 VBGP_IP=BPGIPINPUT && VBGP_AS=BGPASINPUT
 VISP="$(awk -F= '/^ISP=/{print $2}' $SCRIPT_FILE)"
+VISP_GW="$(awk -F= '/^ISP_GW=/{print $2}' $SCRIPT_FILE)"
 VVPN1="$(awk -F= '/^VPN1=/{print $2}' $SCRIPT_FILE)"
 VVPN2="$(awk -F= '/^VPN2=/{print $2}' $SCRIPT_FILE)"
 

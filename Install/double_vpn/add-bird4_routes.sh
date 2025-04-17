@@ -2,6 +2,7 @@
 
  #USER VARIABLE
 ISP=ISPINPUT
+#ISP_GW=$(ip route | grep -m 1 -E "via.*$ISP_NAME" | awk '{print $3}')
 VPN1=VPN1INPUT
 VPN2=VPN2INPUT
 URLS="URLINPUT"
@@ -36,6 +37,7 @@ ipr_func lo $BLACKLIST | diff_funk $ROUTE_BASE_VPN -
 ipr_func lo $VPNTXT | diff_funk $ROUTE_USER_VPN -
 
  #FORCE_LIST
+if [ ! -z "$ISP_GW" ]; then ISP=$ISP_GW; fi
 ipr_func $ISP $ISPTXT | diff_funk $ROUTE_FORCE_ISP -
 ipr_func $VPN1 $VPN1TXT | diff_funk $ROUTE_FORCE_VPN1 -
 ipr_func $VPN2 $VPN2TXT | diff_funk $ROUTE_FORCE_VPN2 -

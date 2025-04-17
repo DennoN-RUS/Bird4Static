@@ -52,6 +52,7 @@ get_old_config_func(){
     if [ -n "$VBGP_IP" ]; then BGP_IP="$VBGP_IP"; fi
     if [ -n "$VBGP_AS" ]; then BGP_AS="$VBGP_AS"; fi
     if [ -n "$VISP" ]; then ISP="$VISP"; fi
+    if [ -n "$VISP_GW" ]; then ISP_GW="$VISP_GW"; fi
     if [ -n "$VVPN1" ]; then VPN1="$VVPN1"; fi
     if [ -n "$VVPN2" ]; then VPN2="$VVPN2"; fi
   fi
@@ -84,6 +85,7 @@ fill_folder_and_sed_func(){
   fi
   sed -i 's/VERSIONINPUT/'$VERSION_NEW'/; s/CONFINPUT/'$CONF'/; s/SCRIPTSINPUT/'$SCRIPTS_SED'/' $SCRIPTS/*.sh
   sed -i 's/HOMEFOLDERINPUT/'$HOME_FOLDER_SED'/; s/SYSTEMFOLDERINPUT/'$SYSTEM_FOLDER_SED'/' $SCRIPTS/*.sh
+  if [ -n "$VISP_GW" ]; then sed -i 's/#ISP_GW=/ISP_GW=/' $SCRIPTS/*.sh fi
 }
 
 # Copying the bird configuration file
@@ -137,12 +139,14 @@ configure_bgp_mode_func(){
   configure_file_mode_func
   cat $HOME_FOLDER/Install/common/bird-bgp.conf >> $SYSTEM_FOLDER/etc/bird.conf
   if [ "$1" != "-u" ] && [ -z "$BGP_IP" ] && [ -z "$BGP_AS" ]; then
-    echo -e "Which BGP service do you want to use\n 1 - antifilter.download 45.154.73.71 (default) \n 2 - antifilter.network 45.148.244.55 \n 3 - antifilter.network with vpn 10.75.66.20 ( you need install vpn first https://antifilter.network/vpn )"
+    echo -e "Which BGP service do you want to use\n 1 - antifilter.download 45.154.73.71 (default) \n 2 - antifilter.network 45.148.244.55 \n 3 - antifilter.network with vpn 10.75.66.20 ( you need install vpn first https://antifilter.network/vpn \n 4 - Re:filter 165.22.127.207"
     read BGP
     if [ "$BGP" == "2" ]; then
       BGP_IP="45.148.244.55" && BGP_AS="65444"
     elif [ "$BGP" == "3" ]; then
       BGP_IP="10.75.66.20" && BGP_AS="65444"
+    elif [ "$BGP" == "4" ]; then
+      BGP_IP="165.22.127.207" && BGP_AS="65412"
     else
       BGP_IP="45.154.73.71" && BGP_AS="65432"
     fi
@@ -172,6 +176,7 @@ config_isp_func(){
     ISP_IP="123.123.123.123";
   fi
   sed -i 's/ISPINPUT/'$ISP'/' $SCRIPTS/*.sh
+  sed -i 's/ISPGWINPUT/'$ISP_GW'/' $SCRIPTS/*.sh
   sed -i 's/IDINPUT/'$ISP_IP'/' $SYSTEM_FOLDER/etc/bird.conf
 }
 

@@ -85,7 +85,7 @@ fill_folder_and_sed_func(){
   fi
   sed -i 's/VERSIONINPUT/'$VERSION_NEW'/; s/CONFINPUT/'$CONF'/; s/SCRIPTSINPUT/'$SCRIPTS_SED'/' $SCRIPTS/*.sh
   sed -i 's/HOMEFOLDERINPUT/'$HOME_FOLDER_SED'/; s/SYSTEMFOLDERINPUT/'$SYSTEM_FOLDER_SED'/' $SCRIPTS/*.sh
-  if [ -n "$VISP_GW" ]; then sed -i 's/#ISP_GW=/ISP_GW=/' $SCRIPTS/*.sh fi
+  if [ -n "$VISP_GW" ]; then sed -i 's/#ISP_GW=/ISP_GW=/' $SCRIPTS/*.sh; fi
 }
 
 # Copying the bird configuration file

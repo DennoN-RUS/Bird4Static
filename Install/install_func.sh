@@ -176,7 +176,7 @@ config_isp_func(){
     ISP_IP="123.123.123.123";
   fi
   sed -i 's/ISPINPUT/'$ISP'/' $SCRIPTS/*.sh
-  sed -i 's/ISPGWINPUT/'$ISP_GW'/' $SCRIPTS/*.sh
+  if [ -n "$VISP_GW" ]; then sed -i 's/#ISP_GW=/ISP_GW=/' $SCRIPTS/*.sh; fi
   sed -i 's/IDINPUT/'$ISP_IP'/' $SYSTEM_FOLDER/etc/bird.conf
 }
 

@@ -33,7 +33,7 @@ curl_funk $URLS $BLACKLIST | diff_funk $BLACKLIST -
 ipr_func lo $BLACKLIST | diff_funk $ROUTE_BASE_VPN -
 
  #FORCE_LIST
-if [ ! -z "$ISP_IP" ]; then ISP=$ISP_IP; fi
+if [ ! -z "$ISP_GW" ]; then ISP=$ISP_GW; fi
 ipr_func $ISP $ISPTXT | diff_funk $ROUTE_FORCE_ISP -
 ipr_func $VPN1 $VPNTXT | diff_funk $ROUTE_FORCE_VPN1 -
 

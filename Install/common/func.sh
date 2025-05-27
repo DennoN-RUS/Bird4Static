@@ -88,7 +88,7 @@ diff_funk() {
 
  #GET AS LIST FUNCTION
 get_as_func() {
-  as_list=$(awk '/^AS([0-9]{1,5})/{print $1}' "$1")
+  as_list=$(awk '/^AS([0-9]{1,5})/{print $1}' "$1" | tr -d '\r')
   if [[ -n "$as_list" ]] ; then 
     if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_X: get as from file $(echo $1 | awk -F/ '{print $NF}' ) ###########\n" >&2; fi
     for cur_as in $as_list; do

@@ -94,8 +94,8 @@ get_as_func() {
     for cur_as in $as_list; do
       if [[ "$DEBUG" == 1 ]]; then out=2; echo -e "\n$cur_as" >&$out; fi
       for i in $out 1; do
-        curl -sk https://stat.ripe.net/data/announced-prefixes/data.json?resource=$cur_as | awk -F '"' '/([0-9]{1,3}.){3}[0-9]{1,3}\/[0-9]{1,2}/{print $4}' | iprange - >&$i
-        #whois -h whois.radb.net -- "-i origin $cur_as" | awk '/^route:/{print $2}' | iprange - >&$i
+        #curl -sk https://stat.ripe.net/data/announced-prefixes/data.json?resource=$cur_as | awk -F '"' '/([0-9]{1,3}.){3}[0-9]{1,3}\/[0-9]{1,2}/{print $4}' | iprange - >&$i
+        whois -h whois.radb.net -- "-i origin $cur_as" | awk '/^route:/{print $2}' | iprange - >&$i
         #curl -sk https://api.bgpview.io/asn/$cur_as/prefixes
        done
     done

@@ -97,8 +97,7 @@ get_as_func() {
         result=""
         result=$(curl -sk "https://stat.ripe.net/data/announced-prefixes/data.json?resource=$cur_as" 2>/dev/null | jq -r '.data.prefixes[] | select(.prefix | contains(".")) | .prefix')
         if [[ -z "$result" ]]; then
-          cur_as_num="${cur_as:2}"
-          result=$(curl -sk "https://api.routeviews.org/guest/asn/$cur_as_num?af=4" 2>/dev/null | jq -r '.[]')
+          result=$(curl -sk "https://api.routeviews.org/guest/asn/${cur_as#AS}?af=4" 2>/dev/null | jq -r '.[]')
         fi
         if [[ -z "$result" ]]; then
           result=$(whois -h whois.radb.net -- "-i origin $cur_as" | awk '/^route:/{print $2}')

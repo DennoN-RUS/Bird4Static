@@ -49,23 +49,23 @@ get_info_func() {
 
  #INIT FILES FUNCTION
 init_files_func() {
-  if [ "$DEBUG" = 1 ]; then printf '\n########### %s STEP_2: add init files ###########\n\n' "$(date)" >&2; fi
+  if [ "$DEBUG" = "1" ]; then printf '\n########### %s STEP_2: add init files ###########\n\n' "$(date)" >&2; fi
   for file in "$@"; do if [ ! -f "$file" ]; then touch "$file"; fi; done
   if [ "$INIT" = "-i" ]; then exit; fi
 }
 
  #WAIT DNS FUNCTION
 wait_dns_func() {
-  if [ "$DEBUG" = 1 ]; then printf '\n########### %s STEP_1: wait dns ###########\n\n' "$(date)" >&2; fi
+  if [ "$DEBUG" = "1" ]; then printf '\n########### %s STEP_1: wait dns ###########\n\n' "$(date)" >&2; fi
   until ADDRS="$(dig +short google.com @localhost -p 53)" && [ -n "$ADDRS" ] > /dev/null 2>&1; do sleep 5; done
 }
 
  #check VPN in bird config
 vpn_bird_func() {
   if [ "$(grep -c "ifname = \"$2\"; #MARK_VPN1" $1)" = 0 ]; then sed -i '/#MARK_VPN1/s/".*"/"'$2'"/' $1; fi
-  if [ "$#" = 2 ]; then
+  if [ "$#" = "2" ]; then
     if [ "$(grep -c "interface \"$2\"" $1)" = 0 ]; then sed -i '/interface/s/".*"/"'$2'"/' $1; fi
-  elif [ "$#" = 3 ]; then
+  elif [ "$#" = "3" ]; then
     if [ "$(grep -c "interface \"$2\", \"$3\"" $1)" = 0 ]; then sed -i '/interface/s/".*", ".*"/"'$2'", "'$3'"/' $1; fi
     if [ "$(grep -c "ifname = \"$3\"; #MARK_VPN2" $1)" = 0 ]; then sed -i '/#MARK_VPN2/s/".*"/"'$3'"/' $1; fi
   fi
@@ -81,7 +81,7 @@ curl_funk() {
 
  #DIFF FUNCTION
 diff_funk() {
-  if [ "$DEBUG" = 1 ]; then
+  if [ "$DEBUG" = "1" ]; then
     patch_file=/tmp/patch_$(echo $1 | awk -F/ '{print $NF}')
     printf '\n########### %s STEP_3: diff %s ###########\n\n' "$(date)" "$(echo "$1" | awk -F/ '{print $NF}')" >&2
     diff -u "$1" "$2" > "$patch_file"
@@ -96,9 +96,9 @@ diff_funk() {
 get_as_func() {
   as_list=$(awk '/^AS([0-9]{1,5})/{print $1}' "$1" | tr -d '\r')
   if [ -n "$as_list" ] ; then
-    if [ "$DEBUG" = 1 ]; then printf '\n########### %s STEP_X: get as from file %s ###########\n\n' "$(date)" "$(echo "$1" | awk -F/ '{print $NF}')" >&2; fi
+    if [ "$DEBUG" = "1" ]; then printf '\n########### %s STEP_X: get as from file %s ###########\n\n' "$(date)" "$(echo "$1" | awk -F/ '{print $NF}')" >&2; fi
     for cur_as in $as_list; do
-      if [ "$DEBUG" = 1 ]; then out=2; printf '\n%s\n' "$cur_as" >&"$out"; fi
+      if [ "$DEBUG" = "1" ]; then out=2; printf '\n%s\n' "$cur_as" >&"$out"; fi
       for i in $out 1; do
         result=""
         result="$(
@@ -124,13 +124,13 @@ fi
  #IPRANGE FUNCTION
 ipr_func() {
   if [ "$(echo "$1" | grep -cE '^([0-9]{1,3}.){3}[0-9]{1,3}$' )" != 0 ]; then cur_gw=$1 ; else cur_gw=\"$1\"; fi
-  if [ "$DEBUG" = 1 ]; then ipr_verb="-v"; printf '\n########### %s STEP_4: ipr func file %s ###########\n\n' "$(date)" "$(echo "$2" | awk -F/ '{print $NF}')" >&2; fi
+  if [ "$DEBUG" = "1" ]; then ipr_verb="-v"; printf '\n########### %s STEP_4: ipr func file %s ###########\n\n' "$(date)" "$(echo "$2" | awk -F/ '{print $NF}')" >&2; fi
   get_as_func "$2" | iprange "$ipr_verb" --print-prefix "route " --print-suffix-nets " via $cur_gw;" --print-suffix-ips "/32 via $cur_gw;" -
 }
 
  #RESTART BIRD FUNCTION
 restart_bird_func() {
-  if [ "$DEBUG" = 1 ]; then printf '\n########### %s STEP_5: restart bird ###########\n\n' "$(date)" >&2; fi
+  if [ "$DEBUG" = "1" ]; then printf '\n########### %s STEP_5: restart bird ###########\n\n' "$(date)" >&2; fi
   if [ "$(cat "$MD5_SUM")" != "$(md5sum $SYSTEM_FOLDER/etc/bird*)" ]; then
     md5sum $SYSTEM_FOLDER/etc/bird* > "$MD5_SUM"
     echo "Restarting bird"

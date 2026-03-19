@@ -1,23 +1,25 @@
 #!/bin/sh
 
+set -eu
+
 VERSION_NEW="v3.11.1"
 
 while true; do
-    echo -e "\nBegin install? y/n"
+    printf '\nBegin install? y/n\n'
     read yn
     case $yn in
         [Yy]* )
 
 # Getting the path to run the script
-ABSOLUTE_FILENAME=`readlink -f "$0"`
-HOME_FOLDER=`dirname "$ABSOLUTE_FILENAME"` && HOME_FOLDER_SED=$(echo $HOME_FOLDER | sed 's/\//\\\//g')
+ABSOLUTE_FILENAME=$(readlink -f "$0")
+HOME_FOLDER=$(dirname "$ABSOLUTE_FILENAME") && HOME_FOLDER_SED=$(echo "$HOME_FOLDER" | sed 's/\//\\\//g')
 LISTS=$HOME_FOLDER/lists
-SCRIPTS=$HOME_FOLDER/scripts && SCRIPTS_SED=$(echo $SCRIPTS | sed 's/\//\\\//g')
-SYSTEM_FOLDER=`echo $HOME_FOLDER | awk -F/opt '{print $1}'`
-SYSTEM_FOLDER=$SYSTEM_FOLDER/opt && SYSTEM_FOLDER_SED=$(echo $SYSTEM_FOLDER | sed 's/\//\\\//g')
-echo -e "HomeFolder is $HOME_FOLDER \nSystemFolder is $SYSTEM_FOLDER"
+SCRIPTS=$HOME_FOLDER/scripts && SCRIPTS_SED=$(echo "$SCRIPTS" | sed 's/\//\\\//g')
+SYSTEM_FOLDER=$(echo "$HOME_FOLDER" | awk -F/opt '{print $1}')
+SYSTEM_FOLDER=$SYSTEM_FOLDER/opt && SYSTEM_FOLDER_SED=$(echo "$SYSTEM_FOLDER" | sed 's/\//\\\//g')
+printf 'HomeFolder is %s\nSystemFolder is %s\n' "$HOME_FOLDER" "$SYSTEM_FOLDER"
 
-source $HOME_FOLDER/Install/install_func.sh
+. "$HOME_FOLDER/Install/install_func.sh"
 
 # Installing packages
 install_packages_func
@@ -32,7 +34,7 @@ stop_func
 print_old_conf
 
 # Try get old config
-if [ "$1" == "-u" ]; then UPDATE=1 && get_old_config_func; fi
+if [ "${1-}" = "-u" ]; then UPDATE=1 && get_old_config_func; fi
 
 # Select number vpn
 select_number_vpn_func
@@ -45,15 +47,15 @@ copy_bird_config_func
 
 # Select mode
 select_mode_func
-if [ "$MODE" == "1" ]; then configure_download_mode_func; fi
-if [ "$MODE" == "2" ]; then configure_bgp_mode_func; fi
-if [ "$MODE" == "3" ]; then configure_file_mode_func; fi
+if [ "$MODE" = "1" ]; then configure_download_mode_func; fi
+if [ "$MODE" = "2" ]; then configure_bgp_mode_func; fi
+if [ "$MODE" = "3" ]; then configure_file_mode_func; fi
 
 # Reading vpn and provider interfaces, replacing in scripts and bird configuration
 show_interfaces_func
 config_isp_func
 config_vpn1_func
-if [ "$CONF" == "2" ]; then config_vpn2_func; fi
+if [ "$CONF" = "2" ]; then config_vpn2_func; fi
 
 # Organizing scripts into folders
 ln_scripts_func
@@ -66,10 +68,10 @@ run_func
 
 #IPset4Static addon
 if [ -d "$HOME_FOLDER/IPset4Static" ] && [ -f "$SYSTEM_FOLDER/etc/init.d/S03ipset-table" ]; then
-  echo -e "\nFound iPset4Static\nDo you want to try update it y/n"
-  read ANS
-  if [ "$ANS" == "y" ]; then
-    sh $HOME_FOLDER/IPset4Static/update.sh
+  printf '\nFound iPset4Static\nDo you want to try update it y/n\n'
+  read -r ANS
+  if [ "$ANS" = "y" ]; then
+    sh "$HOME_FOLDER/IPset4Static/update.sh"
   fi
 else
   install_ipset4static

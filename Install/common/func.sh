@@ -1,17 +1,19 @@
+#!/bin/sh
+
  #SCRIPT VARIABLE
 SYSTEM_FOLDER=SYSTEMFOLDERINPUT
-BLACKLIST=$HOMEPATH/lists/antifilter.list
-ROUTE_FORCE_ISP=$SYSTEM_FOLDER/etc/bird4-force-isp.list
-ROUTE_FORCE_VPN1=$SYSTEM_FOLDER/etc/bird4-force-vpn1.list
-ROUTE_FORCE_VPN2=$SYSTEM_FOLDER/etc/bird4-force-vpn2.list
-ROUTE_BASE_VPN=$SYSTEM_FOLDER/etc/bird4-base-vpn.list
-ROUTE_USER_VPN=$SYSTEM_FOLDER/etc/bird4-user-vpn.list
-BIRD_CONF=$SYSTEM_FOLDER/etc/bird.conf
-VPNTXT=$HOMEPATH/lists/user-vpn.list
-VPN1TXT=$HOMEPATH/lists/user-vpn1.list
-VPN2TXT=$HOMEPATH/lists/user-vpn2.list
-ISPTXT=$HOMEPATH/lists/user-isp.list
-MD5_SUM=$HOMEPATH/scripts/sum.md5
+BLACKLIST="$HOMEPATH/lists/antifilter.list"
+ROUTE_FORCE_ISP="$SYSTEM_FOLDER/etc/bird4-force-isp.list"
+ROUTE_FORCE_VPN1="$SYSTEM_FOLDER/etc/bird4-force-vpn1.list"
+ROUTE_FORCE_VPN2="$SYSTEM_FOLDER/etc/bird4-force-vpn2.list"
+ROUTE_BASE_VPN="$SYSTEM_FOLDER/etc/bird4-base-vpn.list"
+ROUTE_USER_VPN="$SYSTEM_FOLDER/etc/bird4-user-vpn.list"
+BIRD_CONF="$SYSTEM_FOLDER/etc/bird.conf"
+VPNTXT="$HOMEPATH/lists/user-vpn.list"
+VPN1TXT="$HOMEPATH/lists/user-vpn1.list"
+VPN2TXT="$HOMEPATH/lists/user-vpn2.list"
+ISPTXT="$HOMEPATH/lists/user-isp.list"
+MD5_SUM="$HOMEPATH/scripts/sum.md5"
 
  #INFO VARIABLE
 VERSION=VERSIONINPUT
@@ -28,102 +30,109 @@ VVPN2="$(awk -F= '/^VPN2=/{print $2}' $SCRIPT_FILE)"
 
  #GET INFO
 get_info_func() {
-  if [[ "$1" == "-v" ]]; then
+  if [ "$1" = "-v" ]; then
     echo "VERSION=$VERSION"
     echo "CONF=$VCONF"
-    if [ $VCONF == 1 ]; then echo -e " Use one vpn\n ISP=$VISP VPN=$VVPN1"; else echo -e " Use double vpn\n ISP=$VISP VPN1=$VVPN1 VPN2=$VVPN2"; fi
+    if [ $VCONF = 1 ]; then
+      printf ' Use one vpn\n ISP=%s VPN=%s\n' "$VISP" "$VVPN1"
+    else
+      printf ' Use double vpn\n ISP=%s VPN1=%s VPN2=%s\n' "$VISP" "$VVPN1" "$VVPN2"
+    fi
     echo "MODE=$VMODE"
-    if [ $VMODE == 1 ]; then echo -e " Download mode\n URLS=$VURLS";
-    elif [ $VMODE == 2 ]; then echo -e " BGP mode\n IP=$VBGP_IP AS=$VBGP_AS";
+    if [ $VMODE = 1 ]; then printf ' Download mode\n URLS=%s\n' "$VURLS";
+    elif [ $VMODE = 2 ]; then printf ' BGP mode\n IP=%s AS=%s\n' "$VBGP_IP" "$VBGP_AS";
     else echo " File mode"
     fi
     exit
-  elif [[ "$1" == "-d" ]]; then DEBUG=1; fi
+  elif [ "$1" = "-d" ]; then DEBUG=1; fi
 }
 
  #INIT FILES FUNCTION
 init_files_func() {
-  if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_2: add init files ###########\n" >&2; fi
-  for file in $@; do if [ ! -f $file ]; then touch $file; fi; done
-  if [[ "$INIT" == "-i" ]]; then exit; fi
+  if [ "$DEBUG" = 1 ]; then printf '\n########### %s STEP_2: add init files ###########\n\n' "$(date)" >&2; fi
+  for file in "$@"; do if [ ! -f "$file" ]; then touch "$file"; fi; done
+  if [ "$INIT" = "-i" ]; then exit; fi
 }
 
  #WAIT DNS FUNCTION
 wait_dns_func() {
-  if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_1: wait dns ###########\n" >&2; fi
-  until ADDRS=$(dig +short google.com @localhost -p 53) && [ -n "$ADDRS" ] > /dev/null 2>&1; do sleep 5; done 
-} 
+  if [ "$DEBUG" = 1 ]; then printf '\n########### %s STEP_1: wait dns ###########\n\n' "$(date)" >&2; fi
+  until ADDRS="$(dig +short google.com @localhost -p 53)" && [ -n "$ADDRS" ] > /dev/null 2>&1; do sleep 5; done
+}
 
  #check VPN in bird config
 vpn_bird_func() {
-  if [ "$(grep -c "ifname = \"$2\"; #MARK_VPN1" $1)" == 0 ]; then sed -i '/#MARK_VPN1/s/".*"/"'$2'"/' $1; fi
-  if [ "$#" == 2 ]; then
-    if [ "$(grep -c "interface \"$2\"" $1)" == 0 ]; then sed -i '/interface/s/".*"/"'$2'"/' $1; fi
-  elif [ "$#" == 3 ]; then
-    if [ "$(grep -c "interface \"$2\", \"$3\"" $1)" == 0 ]; then sed -i '/interface/s/".*", ".*"/"'$2'", "'$3'"/' $1; fi
-    if [ "$(grep -c "ifname = \"$3\"; #MARK_VPN2" $1)" == 0 ]; then sed -i '/#MARK_VPN2/s/".*"/"'$3'"/' $1; fi
+  if [ "$(grep -c "ifname = \"$2\"; #MARK_VPN1" $1)" = 0 ]; then sed -i '/#MARK_VPN1/s/".*"/"'$2'"/' $1; fi
+  if [ "$#" = 2 ]; then
+    if [ "$(grep -c "interface \"$2\"" $1)" = 0 ]; then sed -i '/interface/s/".*"/"'$2'"/' $1; fi
+  elif [ "$#" = 3 ]; then
+    if [ "$(grep -c "interface \"$2\", \"$3\"" $1)" = 0 ]; then sed -i '/interface/s/".*", ".*"/"'$2'", "'$3'"/' $1; fi
+    if [ "$(grep -c "ifname = \"$3\"; #MARK_VPN2" $1)" = 0 ]; then sed -i '/#MARK_VPN2/s/".*"/"'$3'"/' $1; fi
   fi
 }
 
  #CURL FUNCTION
 curl_funk() {
-  for var in $@; do
-    if [ $(echo "$var" | grep -cE '^(ht|f)t(p|ps)://') != 0 ]; then cur_url=$(echo "$cur_url $var"); else last=$var; fi
+  for var in "$@"; do
+    if [ "$(echo "$var" | grep -cE '^(ht|f)t(p|ps)://')" != 0 ]; then cur_url="$cur_url $var"; else last=$var; fi
   done
-  if [ "$(curl -sk $cur_url | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}')" ]; then curl -sk $cur_url | sort ; else cat $last; fi
+  if curl -sk "$cur_url" | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}'; then curl -sk "$cur_url" | sort ; else cat "$last"; fi
 }
 
  #DIFF FUNCTION
 diff_funk() {
-  if [[ "$DEBUG" == 1 ]]; then
+  if [ "$DEBUG" = 1 ]; then
     patch_file=/tmp/patch_$(echo $1 | awk -F/ '{print $NF}')
-    echo -e "\n########### $(date) STEP_3: diff $(echo $1 | awk -F/ '{print $NF}' ) ###########\n" >&2
-    diff -u $1 $2 > $patch_file
-    cat $patch_file && patch $1 $patch_file
-    rm $patch_file
+    printf '\n########### %s STEP_3: diff %s ###########\n\n' "$(date)" "$(echo "$1" | awk -F/ '{print $NF}')" >&2
+    diff -u "$1" "$2" > "$patch_file"
+    cat "$patch_file" && patch "$1" "$patch_file"
+    rm "$patch_file"
   else
-    diff -u $1 $2 | patch $1 -
+    diff -u "$1" "$2" | patch "$1" -
   fi
 }
 
  #GET AS LIST FUNCTION
 get_as_func() {
   as_list=$(awk '/^AS([0-9]{1,5})/{print $1}' "$1" | tr -d '\r')
-  if [[ -n "$as_list" ]] ; then 
-    if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_X: get as from file $(echo $1 | awk -F/ '{print $NF}' ) ###########\n" >&2; fi
+  if [ -n "$as_list" ] ; then
+    if [ "$DEBUG" = 1 ]; then printf '\n########### %s STEP_X: get as from file %s ###########\n\n' "$(date)" "$(echo "$1" | awk -F/ '{print $NF}')" >&2; fi
     for cur_as in $as_list; do
-      if [[ "$DEBUG" == 1 ]]; then out=2; echo -e "\n$cur_as" >&$out; fi
+      if [ "$DEBUG" = 1 ]; then out=2; printf '\n%s\n' "$cur_as" >&"$out"; fi
       for i in $out 1; do
         result=""
-        result=$(curl -sk "https://stat.ripe.net/data/announced-prefixes/data.json?resource=$cur_as" 2>/dev/null | jq -r '.data.prefixes[] | select(.prefix | contains(".")) | .prefix')
-        if [[ -z "$result" ]]; then
+        result="$(
+          curl -sk "https://stat.ripe.net/data/announced-prefixes/data.json?resource=$cur_as" 2>/dev/null | \
+            jq -r '.data.prefixes[] | select(.prefix | contains(".")) | .prefix'
+        )"
+        if [ -z "$result" ]; then
           cur_as_num="${cur_as:2}"
-          result=$(curl -sk "https://api.routeviews.org/guest/asn/$cur_as_num?af=4" 2>/dev/null | jq -r '.[]')
+          result="$(curl -sk "https://api.routeviews.org/guest/asn/$cur_as_num?af=4" 2>/dev/null | jq -r '.[]')"
         fi
-        if [[ -z "$result" ]]; then
+        if [ -z "$result" ]; then
           result=$(whois -h whois.radb.net -- "-i origin $cur_as" | awk '/^route:/{print $2}')
         fi
-        echo "$result" | iprange - >&$i
+        echo "$result" | iprange - >&"$i"
       done
     done
       awk '!/^AS([0-9]{1,5})/{print $0}' "$1"
   else
-    cat $1
+    cat "$1"
 fi
 }
 
  #IPRANGE FUNCTION
 ipr_func() {
-  if [ $(echo "$1" | grep -cE '^([0-9]{1,3}.){3}[0-9]{1,3}$' ) != 0 ]; then cur_gw=$1 ; else cur_gw=\"$1\"; fi
-  if [[ "$DEBUG" == 1 ]]; then ipr_verb="-v"; echo -e "\n########### $(date) STEP_4: ipr func file $(echo $2 | awk -F/ '{print $NF}' ) ###########\n" >&2; fi
-  get_as_func "$2" | iprange $ipr_verb --print-prefix "route " --print-suffix-nets " via $cur_gw;" --print-suffix-ips "/32 via $cur_gw;" -
+  if [ "$(echo "$1" | grep -cE '^([0-9]{1,3}.){3}[0-9]{1,3}$' )" != 0 ]; then cur_gw=$1 ; else cur_gw=\"$1\"; fi
+  if [ "$DEBUG" = 1 ]; then ipr_verb="-v"; printf '\n########### %s STEP_4: ipr func file %s ###########\n\n' "$(date)" "$(echo "$2" | awk -F/ '{print $NF}')" >&2; fi
+  get_as_func "$2" | iprange "$ipr_verb" --print-prefix "route " --print-suffix-nets " via $cur_gw;" --print-suffix-ips "/32 via $cur_gw;" -
 }
 
  #RESTART BIRD FUNCTION
 restart_bird_func() {
-  if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_5: restart bird ###########\n" >&2; fi
-  if [ "$(cat $MD5_SUM)" != "$(md5sum $SYSTEM_FOLDER/etc/bird*)" ]; then
-    md5sum $SYSTEM_FOLDER/etc/bird* > $MD5_SUM
+  if [ "$DEBUG" = 1 ]; then printf '\n########### %s STEP_5: restart bird ###########\n\n' "$(date)" >&2; fi
+  if [ "$(cat "$MD5_SUM")" != "$(md5sum $SYSTEM_FOLDER/etc/bird*)" ]; then
+    md5sum $SYSTEM_FOLDER/etc/bird* > "$MD5_SUM"
     echo "Restarting bird"
     killall -s SIGHUP bird
   fi
@@ -131,9 +140,9 @@ restart_bird_func() {
 
  #CHECK DUPLICATE IN ROUTES FUNCTION
 check_dupl_func(){
-  dupl_route=$(sort -m $SYSTEM_FOLDER/etc/bird4-force*.list | awk '{print $2}' | uniq -d | grep -Fw -f - $SYSTEM_FOLDER/etc/bird4-force*.list)
-  if [[ -n "$dupl_route" ]]; then
+  dupl_route="$(sort -m $SYSTEM_FOLDER/etc/bird4-force*.list | awk '{print $2}' | uniq -d | grep -Fw -f - "$SYSTEM_FOLDER/etc/bird4-force*.list")"
+  if [ -n "$dupl_route" ]; then
     echo "DUPLICATE IN FILES"
-    echo $dupl_route | sed 's/; /;\n/g' -
+    echo "$dupl_route" | sed 's/; /;\n/g' -
   fi
 }

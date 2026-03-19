@@ -1,67 +1,72 @@
 #!/bin/sh
 
-ABSOLUTE_FILENAME=`readlink -f "$0"`
-HOME_FOLDER=`dirname "$ABSOLUTE_FILENAME"` && HOME_FOLDER_SED=$(echo $HOME_FOLDER | sed 's/\//\\\//g')
-LISTS=$HOME_FOLDER/lists
-SCRIPTS=$HOME_FOLDER/scripts
-SYSTEM_FOLDER=`echo $HOME_FOLDER | awk -F/opt '{print $1}'`
-SYSTEM_FOLDER=$SYSTEM_FOLDER/opt && SYSTEM_FOLDER_SED=$(echo $SYSTEM_FOLDER | sed 's/\//\\\//g')
+set -eu
+
+ABSOLUTE_FILENAME="$(readlink -f "$0")"
+HOME_FOLDER="$(dirname "$ABSOLUTE_FILENAME")" && \
+  HOME_FOLDER_SED="$(echo "$HOME_FOLDER" | sed 's/\//\\\//g')"
+LISTS="$HOME_FOLDER/lists"
+SCRIPTS="$HOME_FOLDER/scripts"
+SYSTEM_FOLDER="$(echo "$HOME_FOLDER" | awk -F/opt '{print $1}')"
+SYSTEM_FOLDER="$SYSTEM_FOLDER/opt" && \
+  SYSTEM_FOLDER_SED="$(echo "$SYSTEM_FOLDER" | sed 's/\//\\\//g')"
 
 SCRIPTS=$HOME_FOLDER/scripts
 
 while true; do
     echo "Begin uninstall? y/n"
-    read yn
+    read -r yn
     case $yn in
         [Yy]* )
 
 # Stop Services
-$SYSTEM_FOLDER/etc/init.d/S02bird-table stop
+"$SYSTEM_FOLDER/etc/init.d/S02bird-table" stop
 if [ -f "$SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4" ]; then
-    $SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4 stop
-    $SYSTEM_FOLDER/bin/opkg --force-removal-of-dependent-packages remove bird1-ipv4
+    "$SYSTEM_FOLDER/etc/init.d/S04bird1-ipv4" stop
+    "$SYSTEM_FOLDER/bin/opkg" --force-removal-of-dependent-packages \
+      remove bird1-ipv4
 fi
 if [ -f "$SYSTEM_FOLDER/etc/init.d/S70bird" ]; then
-    $SYSTEM_FOLDER/etc/init.d/S70bird stop
-    $SYSTEM_FOLDER/bin/opkg --force-removal-of-dependent-packages remove bird2
+    "$SYSTEM_FOLDER/etc/init.d/S70bird" stop
+    "$SYSTEM_FOLDER/bin/opkg" --force-removal-of-dependent-packages remove bird2
 fi
 
 # Remove packages
 # curl
-answer=0; echo "Do you want remove 'curl'? 0 - no 1 - yes (default: no)"; read answer
-if [ "$answer" = "1" ]; then $SYSTEM_FOLDER/bin/opkg remove curl; fi
+answer=0; echo "Do you want remove 'curl'? 0 - no 1 - yes (default: no)"; read -r answer
+if [ "$answer" = "1" ]; then "$SYSTEM_FOLDER/bin/opkg" remove curl; fi
 # cron
-answer=0; echo "Do you want remove 'cron'? 0 - no 1 - yes (default: no)"; read answer
-if [ "$answer" = "1" ]; then $SYSTEM_FOLDER/bin/opkg remove cron; fi
+answer=0; echo "Do you want remove 'cron'? 0 - no 1 - yes (default: no)"; read -r answer
+if [ "$answer" = "1" ]; then "$SYSTEM_FOLDER/bin/opkg" remove cron; fi
 # bind-dig
-answer=0; echo "Do you want remove 'bind-dig'? 0 - no 1 - yes (default: no)"; read answer
-if [ "$answer" = "1" ]; then $SYSTEM_FOLDER/bin/opkg remove bind-dig bind-libs; fi
+answer=0; echo "Do you want remove 'bind-dig'? 0 - no 1 - yes (default: no)"; read -r answer
+if [ "$answer" = "1" ]; then "$SYSTEM_FOLDER/bin/opkg" remove bind-dig bind-libs; fi
 # iprange
-answer=0; echo "Do you want remove 'iprange'? 0 - no 1 - yes (default: no)"; read answer
-if [ "$answer" = "1" ]; then $SYSTEM_FOLDER/bin/opkg remove iprange; fi
+answer=0; echo "Do you want remove 'iprange'? 0 - no 1 - yes (default: no)"; read -r answer
+if [ "$answer" = "1" ]; then "$SYSTEM_FOLDER/bin/opkg" remove iprange; fi
 # whois
-answer=0; echo "Do you want remove 'whois'? 0 - no 1 - yes (default: no)"; read answer
-if [ "$answer" = "1" ]; then $SYSTEM_FOLDER/bin/opkg remove whois; fi
+answer=0; echo "Do you want remove 'whois'? 0 - no 1 - yes (default: no)"; read -r answer
+if [ "$answer" = "1" ]; then "$SYSTEM_FOLDER/bin/opkg" remove whois; fi
 # diff and patch
-answer=0; echo "Do you want remove 'diffutils' and 'patch'? 0 - no 1 - yes (default: no)"; read answer
-if [ "$answer" = "1" ]; then $SYSTEM_FOLDER/bin/opkg remove diffutils patch; fi
+answer=0; echo "Do you want remove 'diffutils' and 'patch'? 0 - no 1 - yes (default: no)"; read -r answer
+if [ "$answer" = "1" ]; then "$SYSTEM_FOLDER/bin/opkg" remove diffutils patch; fi
 
 # Remove start folders
-rm -r $SCRIPTS
+rm -r "$SCRIPTS"
 
 # Remove scripts into folders
-rm $SYSTEM_FOLDER/etc/init.d/S02bird-table
-rm $SYSTEM_FOLDER/etc/cron.hourly/add-bird4_routes.sh
+rm "$SYSTEM_FOLDER/etc/init.d/S02bird-table"
+rm "$SYSTEM_FOLDER/etc/cron.hourly/add-bird4_routes.sh"
 
 # Remove bird lists
-rm -r $SYSTEM_FOLDER/etc/bird4*.list
+rm -r "$SYSTEM_FOLDER"/etc/bird4*.list
 
 #IPset4Static addon
 if [ -d "$HOME_FOLDER/IPset4Static" ]; then
-  echo -e "\nFound iPset4Static\nDo you want uninstall it? y/n"
-  read ANS
-  if [ "$ANS" == "y" ]; then
-    sh $HOME_FOLDER/IPset4Static/uninstall.sh
+  printf '\nFound iPset4Static\nDo you want uninstall it? y/n\n'
+  read -r ANS
+  if [ "$ANS" = "y" ]; then
+    sh "$HOME_FOLDER/IPset4Static/uninstall.sh"
   fi
 fi
 

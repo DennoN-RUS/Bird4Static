@@ -1,0 +1,36 @@
+name: Linters
+on:
+  pull_request:
+    branches:
+      - 'master'
+  push:
+    tags:
+      - 'v*.**.**'
+
+
+jobs:
+  shellcheck:
+    name: Check shell scripts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: shellcheck
+        uses: reviewdog/action-shellcheck@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          pattern: "*.sh"
+          exclude: "./.git/*"
+  mdlint:
+    name: MarkdownLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: markdownlint-cli
+        uses: nosborn/github-action-markdown-cli@v3.3.0
+        with:
+          files: .
+          config_file: .markdownlint.yaml
+          ignore_files: ./LICENSE

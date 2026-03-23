@@ -50,7 +50,7 @@ get_info_func() {
  #INIT FILES FUNCTION
 init_files_func() {
   if [ "$DEBUG" = "1" ]; then printf '\n########### %s STEP_2: add init files ###########\n\n' "$(date)" >&2; fi
-  for file in "$@"; do if [ ! -f "$file" ]; then touch "$file"; fi; done
+  for file in $@; do if [ ! -f "$file" ]; then touch "$file"; fi; done
   if [ "$INIT" = "-i" ]; then exit; fi
 }
 
@@ -73,7 +73,7 @@ vpn_bird_func() {
 
  #CURL FUNCTION
 curl_funk() {
-  for var in "$@"; do
+  for var in ; do
     if [ "$(echo "$var" | grep -cE '^(ht|f)t(p|ps)://')" != 0 ]; then cur_url="$cur_url $var"; else last=$var; fi
   done
   if curl -sk "$cur_url" | grep -E '([0-9]{1,3}.){3}[0-9]{1,3}'; then curl -sk "$cur_url" | sort ; else cat "$last"; fi

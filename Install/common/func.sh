@@ -86,30 +86,129 @@ diff_funk() {
   fi
 }
 
+ #RETRY CMD FUNCTION
+retry_cmd_func() {
+  local label="$1"
+  local cur_as="$2"
+  shift 2
+
+  local attempt rc delay=1
+
+  for attempt in 1 2 3; do
+    [[ "$DEBUG" == 1 ]] && echo "$label: request for $cur_as, attempt $attempt/3" >&2
+
+    "$@" 2>/dev/null
+    rc=$?
+
+    if [[ $rc -eq 0 ]]; then
+      [[ "$DEBUG" == 1 ]] && echo "$label: request for $cur_as succeeded on attempt $attempt/3" >&2
+      return 0
+    fi
+
+    if [[ $attempt -lt 3 ]]; then
+      [[ "$DEBUG" == 1 ]] && echo "$label: request for $cur_as failed with rc=$rc, retry in ${delay}s" >&2
+      sleep "$delay"
+      delay=$((delay * 2))
+    else
+      [[ "$DEBUG" == 1 ]] && echo "$label: request for $cur_as failed permanently, rc=$rc" >&2
+    fi
+  done
+
+  return "$rc"
+}
+
+ #LOG SOURCE RESULT FUNCTION
+log_source_result_func() {
+  local label="$1"
+  local cur_as="$2"
+  local result="$3"
+
+  [[ "$DEBUG" != 1 ]] && return 0
+
+  if [[ -n "$result" ]]; then
+    echo "$label: prefixes found for $cur_as" >&2
+  else
+    echo "$label: no IPv4 prefixes for $cur_as" >&2
+  fi
+}
+ #GET PREFIXES FROM RIPE FUNCTION
+get_prefixes_ripe_func() {
+  local cur_as="$1"
+  local result
+
+  result="$(
+    retry_cmd_func "RIPE" "$cur_as" \
+      curl -fsSk "https://stat.ripe.net/data/announced-prefixes/data.json?resource=$cur_as" |
+      jq -r '.data.prefixes[]? | select(.prefix? and (.prefix | contains("."))) | .prefix'
+  )"
+
+  log_source_result_func "RIPE" "$cur_as" "$result"
+  printf '%s\n' "$result"
+}
+
+ #GET PREFIXES FROM ROUTEVIEWS FUNCTION
+get_prefixes_routeviews_func() {
+  local cur_as="$1"
+  local cur_as_num="${cur_as#AS}"
+  local result
+
+  result="$(
+    retry_cmd_func "RouteViews" "$cur_as" \
+      curl -fsSk "https://api.routeviews.org/guest/asn/$cur_as_num?af=4" |
+      jq -r '.[]?'
+  )"
+
+  log_source_result_func "RouteViews" "$cur_as" "$result"
+  printf '%s\n' "$result"
+}
+
+ #GET PREFIXES FROM RADB FUNCTION
+get_prefixes_radb_func() {
+  local cur_as="$1"
+  local result
+
+  result="$(
+    retry_cmd_func "RADB" "$cur_as" \
+      whois -h whois.radb.net -- "-i origin $cur_as" |
+      awk '/^route:/{print $2}'
+  )"
+
+  log_source_result_func "RADB" "$cur_as" "$result"
+  printf '%s\n' "$result"
+}
+
  #GET AS LIST FUNCTION
 get_as_func() {
-  as_list=$(awk '/^AS([0-9]{1,5})/{print $1}' "$1" | tr -d '\r')
-  if [[ -n "$as_list" ]] ; then 
-    if [[ "$DEBUG" == 1 ]]; then echo -e "\n########### $(date) STEP_X: get as from file $(echo $1 | awk -F/ '{print $NF}' ) ###########\n" >&2; fi
-    for cur_as in $as_list; do
-      if [[ "$DEBUG" == 1 ]]; then out=2; echo -e "\n$cur_as" >&$out; fi
-      for i in $out 1; do
-        result=""
-        result=$(curl -sk "https://stat.ripe.net/data/announced-prefixes/data.json?resource=$cur_as" 2>/dev/null | jq -r '.data.prefixes[] | select(.prefix | contains(".")) | .prefix')
-        if [[ -z "$result" ]]; then
-          cur_as_num="${cur_as:2}"
-          result=$(curl -sk "https://api.routeviews.org/guest/asn/$cur_as_num?af=4" 2>/dev/null | jq -r '.[]')
-        fi
-        if [[ -z "$result" ]]; then
-          result=$(whois -h whois.radb.net -- "-i origin $cur_as" | awk '/^route:/{print $2}')
-        fi
-        echo "$result" | iprange - >&$i
-      done
-    done
-      awk '!/^AS([0-9]{1,5})/{print $0}' "$1"
-  else
-    cat $1
-fi
+  local input_file="$1"
+  local as_list
+  local cur_as
+  local result
+
+  as_list="$(awk '/^AS([0-9]{1,5})$/{print $1}' "$input_file" | tr -d '\r')"
+
+  if [[ -z "$as_list" ]]; then
+    cat "$input_file"
+    return 0
+  fi
+
+  [[ "$DEBUG" == 1 ]] && echo -e "\n########### STEP_X: get as from file $(basename "$input_file") ###########\n" >&2
+
+  for cur_as in $as_list; do
+    [[ "$DEBUG" == 1 ]] && echo -e "\n$cur_as" >&2
+
+    result="$(get_prefixes_ripe_func "$cur_as")"
+    [[ -z "$result" ]] && result="$(get_prefixes_routeviews_func "$cur_as")"
+    [[ -z "$result" ]] && result="$(get_prefixes_radb_func "$cur_as")"
+
+    if [[ -n "$result" ]]; then
+      [[ "$DEBUG" == 1 ]] && printf '%s\n' "$result" | iprange - >&2
+      printf '%s\n' "$result" | iprange -
+    else
+      [[ "$DEBUG" == 1 ]] && echo "No prefixes found for $cur_as in any source" >&2
+    fi
+  done
+
+  awk '!/^AS([0-9]{1,5})$/{print $0}' "$input_file"
 }
 
  #IPRANGE FUNCTION

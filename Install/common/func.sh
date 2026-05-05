@@ -196,8 +196,8 @@ get_as_func() {
   for cur_as in $as_list; do
     [[ "$DEBUG" == 1 ]] && echo -e "\n$cur_as" >&2
 
-    result="$(get_prefixes_ripe_func "$cur_as")"
-    [[ -z "$result" ]] && result="$(get_prefixes_routeviews_func "$cur_as")"
+    result="$(get_prefixes_routeviews_func "$cur_as")"
+    [[ -z "$result" ]] && result="$(get_prefixes_ripe_func "$cur_as")"
     [[ -z "$result" ]] && result="$(get_prefixes_radb_func "$cur_as")"
 
     if [[ -n "$result" ]]; then

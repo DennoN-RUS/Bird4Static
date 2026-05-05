@@ -184,7 +184,7 @@ get_as_func() {
   local cur_as
   local result
 
-  as_list="$(awk '/^AS([0-9]{1,6})$/{print $1}' "$input_file" | tr -d '\r')"
+  as_list="$(awk '/^AS([0-9]{1,6})/{print $1}' "$input_file" | tr -d '\r')"
 
   if [[ -z "$as_list" ]]; then
     cat "$input_file"
@@ -208,7 +208,7 @@ get_as_func() {
     fi
   done
 
-  awk '!/^AS([0-9]{1,6})$/{print $0}' "$input_file"
+  awk '!/^AS([0-9]{1,6})/{print $0}' "$input_file"
 }
 
  #IPRANGE FUNCTION

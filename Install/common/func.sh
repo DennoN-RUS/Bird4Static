@@ -201,8 +201,8 @@ get_as_func() {
     [[ -z "$result" ]] && result="$(get_prefixes_radb_func "$cur_as")"
 
     if [[ -n "$result" ]]; then
-      [[ "$DEBUG" == 1 ]] && printf '%s\n' "$result" | iprange - >&2
-      printf '%s\n' "$result" | iprange -
+      [[ "$DEBUG" == 1 ]] && printf '%s\n' "$result" | grep -xv '0\.0\.0\.0/0' | iprange - >&2
+      printf '%s\n' "$result" | grep -xv '0\.0\.0\.0/0' | iprange -
     else
       [[ "$DEBUG" == 1 ]] && echo "No prefixes found for $cur_as in any source" >&2
     fi
